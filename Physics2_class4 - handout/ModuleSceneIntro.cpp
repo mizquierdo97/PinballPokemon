@@ -16,7 +16,26 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
-{}
+{
+	sprites = App->textures->Load("Game/pinball/pokemons.png");
+
+	// - ANIMATIONS - pokemons
+
+	pikachu.PushBack({ 46,21,25,24 });
+	pikachu.PushBack({ 74,21,23,24 });
+
+
+
+
+
+
+
+
+
+
+	// - ANIMATIONS - pokemons  - END -
+
+}
 
 // Load assets
 bool ModuleSceneIntro::Start()
@@ -26,11 +45,11 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("pinball/wheel.png"); 
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	background = App->textures->Load("pinball/ruby.png");
+	circle = App->textures->Load("game/pinball/wheel.png");
+	box = App->textures->Load("game/pinball/crate.png");
+	rick = App->textures->Load("game/pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	background = App->textures->Load("game/pinball/ruby.png");
 
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
@@ -39,15 +58,15 @@ bool ModuleSceneIntro::Start()
 	Shape_Map1();
 
 
-	ball = App->physics->CreateCircle(250,380, 6);
+	ball = App->physics->CreateCircle(250, 380, 6);
 	ball->body->IsBullet();
 
-	//////////Revolution Joint
+
 	////RIGHT
-	right = App->physics->CreateRectangle(149,376, 28,7);
-	
-	
-	
+	right = App->physics->CreateRectangle(149, 376, 28, 7);
+
+
+
 	point_right = App->physics->CreateCircle(149, 376, 2);
 	point_right->body->SetType(b2_staticBody);
 
@@ -69,7 +88,7 @@ bool ModuleSceneIntro::Start()
 
 	point_left = App->physics->CreateCircle(87, 376, 2);
 	point_left->body->SetType(b2_staticBody);
-	
+
 
 
 	revoluteJointDef_left.bodyA = left->body;
@@ -81,19 +100,6 @@ bool ModuleSceneIntro::Start()
 	revoluteJointDef_left.localAnchorA.Set(PIXEL_TO_METERS(-13), 0);
 	revoluteJointDef_left.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
-	
-	//////////Prismatic Joint
-	launcher = App->physics->CreateRectangle(200, 200, 10, 3);
-	staticLauncher = App->physics->CreateRectangle(200, 204, 10, 3);
-	staticLauncher->body->SetType(b2_staticBody);
-
-	prismaticJoint_launcher.bodyA = launcher->body;
-	prismaticJoint_launcher.bodyB = staticLauncher->body;
-	prismaticJoint_launcher.localAnchorA.Set(0, 0);
-	prismaticJoint_launcher.localAnchorB.Set(0, 0);
-	prismaticJoint_launcher.collideConnected = true; 
-	prismaticJoint_launcher.upperTranslation = 5;
-	b2PrismaticJoint* joint_launcher = (b2PrismaticJoint*)App->physics->world->CreateJoint(&prismaticJoint_launcher);
 
 
 	return ret;
@@ -110,7 +116,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-	
+
 	App->renderer->Blit(background, 0, 0);
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(0, -150);
@@ -132,7 +138,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-		ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS( App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY())), 0);
+		ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY())), 0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
@@ -144,7 +150,7 @@ update_status ModuleSceneIntro::Update()
 		static bool temp = false;
 		if (temp == true)
 			Shape_Map1();
-		
+
 		else
 			Shape_Map2();
 		temp = !temp;
@@ -162,13 +168,14 @@ update_status ModuleSceneIntro::Update()
 			change = !change;
 		}
 	}
-	
 
-	launcher->body->ApplyForceToCenter(b2Vec2(0, 1), 1);
+
+
+
 
 	//OnCollision(ball,sensor);
 	// Prepare for raycast ------------------------------------------------------
-	
+
 	iPoint mouse;
 	mouse.x = App->input->GetMouseX();
 	mouse.y = App->input->GetMouseY();
@@ -179,46 +186,51 @@ update_status ModuleSceneIntro::Update()
 	// All draw functions ------------------------------------------------------
 	p2List_item<PhysBody*>* c = circles.getFirst();
 
-	while(c != NULL)
+	while (c != NULL)
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
-		if(c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
+		if (c->data->Contains(App->input->GetMouseX(), App->input->GetMouseY()))
 			App->renderer->Blit(circle, x, y, NULL, 1.0f, c->data->GetRotation());
 		c = c->next;
 	}
 
 	c = boxes.getFirst();
 
-	while(c != NULL)
+	while (c != NULL)
 	{
 		int x, y;
 		c->data->GetPosition(x, y);
 		App->renderer->Blit(box, x, y, NULL, 1.0f, c->data->GetRotation());
-		if(ray_on)
+		if (ray_on)
 		{
 			int hit = c->data->RayCast(ray.x, ray.y, mouse.x, mouse.y, normal.x, normal.y);
-			if(hit >= 0)
+			if (hit >= 0)
 				ray_hit = hit;
 		}
 		c = c->next;
 	}
 
-	
+
 
 	// ray -----------------
-	if(ray_on == true)
+	if (ray_on == true)
 	{
-		fVector destination(mouse.x-ray.x, mouse.y-ray.y);
+		fVector destination(mouse.x - ray.x, mouse.y - ray.y);
 		destination.Normalize();
 		destination *= ray_hit;
 
 		App->renderer->DrawLine(ray.x, ray.y, ray.x + destination.x, ray.y + destination.y, 255, 255, 255);
 
-		if(normal.x != 0.0f)
+		if (normal.x != 0.0f)
 			App->renderer->DrawLine(ray.x + destination.x, ray.y + destination.y, ray.x + destination.x + normal.x * 25.0f, ray.y + destination.y + normal.y * 25.0f, 100, 255, 100);
 	}
-	
+
+
+
+	//App->render->Blit(graphics, position_i.x, position_i.y - r_i.h, &inky);
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -241,7 +253,7 @@ void ModuleSceneIntro::Shape_Map1()
 		//ricks.clear();
 	}
 	ricks.clear();
-	
+
 
 	int map[96] = {
 		235, 394,
@@ -351,7 +363,7 @@ void ModuleSceneIntro::Shape_Map1()
 		49, 240,
 		38, 216,
 		34, 197
-		
+
 	};
 	int shape4[12] = {
 		131, 76,
@@ -388,6 +400,53 @@ void ModuleSceneIntro::Shape_Map1()
 		149, 74
 	};
 
+	int shape8[42] = {
+		191, 227,
+		191, 241,
+		196, 232,
+		203, 216,
+		207, 200,
+		210, 182,
+		209, 161,
+		208, 144,
+		202, 124,
+		192, 102,
+		178, 89,
+		166, 82,
+		166, 99,
+		180, 109,
+		188, 119,
+		195, 135,
+		201, 157,
+		204, 176,
+		204, 188,
+		200, 203,
+		195, 218
+	};
+
+
+
+	int shape9[34] = {
+		173, 210,
+		173, 222,
+		185, 204,
+		191, 185,
+		188, 164,
+		177, 163,
+		168, 167,
+		160, 179,
+		154, 191,
+		154, 200,
+		161, 200,
+		169, 182,
+		175, 172,
+		184, 171,
+		184, 184,
+		181, 193,
+		177, 200
+	};
+
+
 	int rebote1[6] = {
 		173, 318,
 		173, 337,
@@ -401,12 +460,9 @@ void ModuleSceneIntro::Shape_Map1()
 	};
 
 
-	
-
-
 
 	//ball = App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 5);
-	
+
 	ricks.add(App->physics->CreateChain(0, 0, map, 96));
 	ricks.add(App->physics->CreateChain(0, 0, shape1, 26));
 	ricks.add(App->physics->CreateChain(0, 0, shape2, 58));
@@ -415,6 +471,8 @@ void ModuleSceneIntro::Shape_Map1()
 	ricks.add(App->physics->CreateChain(0, 0, shape5, 16));
 	ricks.add(App->physics->CreateChain(0, 0, shape6, 14));
 	ricks.add(App->physics->CreateChain(0, 0, shape7, 10));
+	ricks.add(App->physics->CreateChain(0, 0, shape8, 42));
+	ricks.add(App->physics->CreateChain(0, 0, shape9, 34));
 	ricks.add(App->physics->CreateChain(0, 0, rebote1, 6));
 	ricks.add(App->physics->CreateChain(0, 0, rebote2, 6));
 }
@@ -429,7 +487,7 @@ void ModuleSceneIntro::Shape_Map2()
 		//ricks.clear();
 	}
 	ricks.clear();
-	
+
 	int map[74] = {
 		143, 443,
 		143, 403,
