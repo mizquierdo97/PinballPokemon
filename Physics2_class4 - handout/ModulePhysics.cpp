@@ -352,7 +352,7 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
 	
-	if (physA == App->scene_intro->sensor) {
+	if (physA == App->scene_intro->sensor || physA == App->scene_intro->sensor2) {
 		App->scene_intro->change = true;
 	}
 

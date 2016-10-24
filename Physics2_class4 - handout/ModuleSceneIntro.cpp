@@ -30,11 +30,11 @@ bool ModuleSceneIntro::Start()
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	background = App->textures->Load("pinball/rubys.png");
+	background = App->textures->Load("pinball/ruby.png");
 
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
-	sensor2 = App->physics->CreateRectangleSensor(150, 187, 5, 5);
+	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
 	//Start Shape Map
 	Shape_Map1();
 
@@ -42,7 +42,7 @@ bool ModuleSceneIntro::Start()
 	ball = App->physics->CreateCircle(250,380, 6);
 	ball->body->IsBullet();
 
-
+	//////////Revolution Joint
 	////RIGHT
 	right = App->physics->CreateRectangle(149,376, 28,7);
 	
@@ -82,6 +82,19 @@ bool ModuleSceneIntro::Start()
 	revoluteJointDef_left.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
 	
+	//////////Prismatic Joint
+	launcher = App->physics->CreateRectangle(200, 200, 10, 3);
+	staticLauncher = App->physics->CreateRectangle(200, 204, 10, 3);
+	staticLauncher->body->SetType(b2_staticBody);
+
+	prismaticJoint_launcher.bodyA = launcher->body;
+	prismaticJoint_launcher.bodyB = staticLauncher->body;
+	prismaticJoint_launcher.localAnchorA.Set(0, 0);
+	prismaticJoint_launcher.localAnchorB.Set(0, 0);
+	prismaticJoint_launcher.collideConnected = true; 
+	prismaticJoint_launcher.upperTranslation = 5;
+	b2PrismaticJoint* joint_launcher = (b2PrismaticJoint*)App->physics->world->CreateJoint(&prismaticJoint_launcher);
+
 
 	return ret;
 }
@@ -151,8 +164,7 @@ update_status ModuleSceneIntro::Update()
 	}
 	
 
-	
-
+	launcher->body->ApplyForceToCenter(b2Vec2(0, 1), 1);
 
 	//OnCollision(ball,sensor);
 	// Prepare for raycast ------------------------------------------------------

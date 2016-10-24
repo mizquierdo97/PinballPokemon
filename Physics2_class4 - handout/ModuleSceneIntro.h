@@ -32,6 +32,10 @@ public:
 	b2RevoluteJointDef revoluteJointDef_right;
 	b2RevoluteJointDef revoluteJointDef_left;
 
+	PhysBody* launcher;
+	PhysBody* staticLauncher;
+	b2PrismaticJointDef prismaticJoint_launcher;
+
 	bool shape_map = false;
 	bool change = false;
 
