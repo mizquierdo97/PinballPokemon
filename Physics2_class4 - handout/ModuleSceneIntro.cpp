@@ -16,7 +16,25 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 }
 
 ModuleSceneIntro::~ModuleSceneIntro()
-{}
+{
+	sprites = App->textures->Load("Game/pinball/pokemons.png");
+
+	// - ANIMATIONS - pokemons
+
+	pikachu.PushBack({50,50,50,50});
+
+
+
+
+
+
+
+
+
+
+	// - ANIMATIONS - pokemons  - END -
+
+}
 
 // Load assets
 bool ModuleSceneIntro::Start()
@@ -26,11 +44,11 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("pinball/wheel.png"); 
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	background = App->textures->Load("pinball/rubys.png");
+	circle = App->textures->Load("game/pinball/wheel.png"); 
+	box = App->textures->Load("game/pinball/crate.png");
+	rick = App->textures->Load("game/pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	background = App->textures->Load("game/pinball/ruby.png");
 
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
@@ -376,6 +394,45 @@ void ModuleSceneIntro::Shape_Map1()
 		149, 74
 	};
 
+	int shape8[30] = {
+		191, 240,
+		191, 227,
+		199, 210,
+		203, 190,
+		204, 173,
+		200, 155,
+		185, 133,
+		185, 115,
+		197, 130,
+		204, 140,
+		209, 154,
+		211, 175,
+		208, 202,
+		203, 218,
+		196, 231
+	};
+
+	int shape9[34] = {
+		173, 210,
+		173, 222,
+		185, 204,
+		191, 185,
+		188, 164,
+		177, 163,
+		168, 167,
+		160, 179,
+		154, 191,
+		154, 200,
+		161, 200,
+		169, 182,
+		175, 172,
+		184, 171,
+		184, 184,
+		181, 193,
+		177, 200
+	};
+
+
 	int rebote1[6] = {
 		173, 318,
 		173, 337,
@@ -403,6 +460,8 @@ void ModuleSceneIntro::Shape_Map1()
 	ricks.add(App->physics->CreateChain(0, 0, shape5, 16));
 	ricks.add(App->physics->CreateChain(0, 0, shape6, 14));
 	ricks.add(App->physics->CreateChain(0, 0, shape7, 10));
+	ricks.add(App->physics->CreateChain(0, 0, shape8, 30));
+	ricks.add(App->physics->CreateChain(0, 0, shape9, 34));
 	ricks.add(App->physics->CreateChain(0, 0, rebote1, 6));
 	ricks.add(App->physics->CreateChain(0, 0, rebote2, 6));
 }

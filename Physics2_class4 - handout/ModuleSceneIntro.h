@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "ModulePhysics.h"
 #include "Application.h"
+#include "animation.h"
 
 class PhysBody;
 
@@ -48,4 +49,9 @@ public:
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
+
+
+	SDL_Texture* sprites = nullptr;
+	Animation pikachu;
+
 };
