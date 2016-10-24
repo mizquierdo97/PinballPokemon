@@ -12,7 +12,7 @@
 
 # Build results
 [Dd]ebug/
-!Box2D/libx86
+!Box2D/libx86/Debug
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
