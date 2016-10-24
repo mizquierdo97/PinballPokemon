@@ -83,6 +83,36 @@ bool ModuleSceneIntro::Start()
 	revoluteJointDef_left.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
 
+	//////////Prismatic Joint
+	launcher = App->physics->CreateRectangle(243, 380, 15, 5);
+	staticLauncher = App->physics->CreateRectangle(243, 390, 15, 5);
+	staticLauncher->body->SetType(b2_staticBody);
+	//launcher->body->SetType(b2_kinematicBody);
+
+	prismaticJoint_launcher.collideConnected = true;
+	prismaticJoint_launcher.enableLimit = true;
+
+
+
+	prismaticJoint_launcher.bodyB = launcher->body;
+	prismaticJoint_launcher.bodyA = staticLauncher->body;
+
+
+
+	prismaticJoint_launcher.lowerTranslation = 1.0;
+	prismaticJoint_launcher.upperTranslation = 5.0;
+
+
+	prismaticJoint_launcher.localAnchorA.Set(0, 0);
+	prismaticJoint_launcher.localAnchorB.Set(0, 0);
+
+
+
+
+	prismaticJoint_launcher.localAxisA.Set(0, 0);
+
+	b2PrismaticJoint* joint_launcher = (b2PrismaticJoint*)App->physics->world->CreateJoint(&prismaticJoint_launcher);
+
 
 	//////  -------------------SPRITES--------------------
 
