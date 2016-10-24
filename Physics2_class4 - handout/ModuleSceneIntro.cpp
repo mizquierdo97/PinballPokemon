@@ -103,6 +103,16 @@ bool ModuleSceneIntro::Start()
 	cyndaquil.PushBack({ 55,146,33,41 });
 	cyndaquil.speed = 0.04f;
 
+	spoink_relax.PushBack({ 5,57,22,42 });
+	spoink_relax.PushBack({ 33,58,22,42 });
+	spoink_relax.speed = 0.04f;
+
+	spoink_fast.PushBack({ 58,64,21,36 });
+	spoink_fast.PushBack({ 83,64,21,36 });
+	spoink_fast.PushBack({ 108,64,21,36 });
+	spoink_fast.PushBack({ 83,64,21,36 });
+	spoink_fast.speed = 0.2f;
+
 
 	//////  -------------------SPRITES--------------------
 
@@ -134,7 +144,20 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(20, 0);
 		ball->body->ApplyForceToCenter(force, 1);
+
 	}
+
+
+	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
+		b2Vec2 force = b2Vec2(0, -150);
+		ball->body->ApplyForceToCenter(force, 1);
+
+
+
+	}
+
+
+
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
 		b2Vec2 force = b2Vec2(0, -400);
 		right->body->ApplyForceToCenter(force, 1);
@@ -238,6 +261,16 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
+
+	if (App->input->GetKey(SDL_SCANCODE_Z) != KEY_REPEAT)
+	{
+		App->renderer->Blit(sprites, 232, 352, &(spoink_relax.GetCurrentFrame()), 0.01f);
+	}
+	else
+	{
+		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
+	}
+	
 
 
 	return UPDATE_CONTINUE;

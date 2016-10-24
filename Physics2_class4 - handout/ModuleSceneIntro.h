@@ -59,5 +59,7 @@ public:
 	Animation pikachu;
 	Animation makuhita;
 	Animation cyndaquil;
+	Animation spoink_relax;
+	Animation spoink_fast;
 
 };
