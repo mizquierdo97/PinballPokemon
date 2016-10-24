@@ -17,13 +17,7 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {
-	sprites = App->textures->Load("Game/pinball/pokemons.png");
-
-	// - ANIMATIONS - pokemons
-
-	pikachu.PushBack({ 46,21,25,24 });
-	pikachu.PushBack({ 74,21,23,24 });
-
+	
 
 
 
@@ -102,6 +96,16 @@ bool ModuleSceneIntro::Start()
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
 
 
+	//////SPRITES
+
+
+	sprites = App->textures->Load("Game/pinball/pokemons.png");
+
+	// - ANIMATIONS - pokemons
+
+	pikachu.PushBack({ 46,21,25,24 });
+	pikachu.PushBack({ 72,21,26,28 });
+	pikachu.speed = 0.04f;
 	return ret;
 }
 
@@ -116,7 +120,7 @@ bool ModuleSceneIntro::CleanUp()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
-
+	static int pikachu_x = 20;
 	App->renderer->Blit(background, 0, 0);
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(0, -150);
@@ -135,6 +139,7 @@ update_status ModuleSceneIntro::Update()
 		b2Vec2 force = b2Vec2(0, -400);
 		right->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
+		pikachu_x = 197;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
@@ -145,7 +150,9 @@ update_status ModuleSceneIntro::Update()
 		b2Vec2 force = b2Vec2(0, -400);
 		left->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_left.lowerAngle = 30 * DEGTORAD;
+		pikachu_x = 20;
 	}
+
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
 		static bool temp = false;
 		if (temp == true)
@@ -228,7 +235,7 @@ update_status ModuleSceneIntro::Update()
 
 
 
-	//App->render->Blit(graphics, position_i.x, position_i.y - r_i.h, &inky);
+	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
 
 
 	return UPDATE_CONTINUE;
