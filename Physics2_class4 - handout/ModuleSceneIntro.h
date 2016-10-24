@@ -57,5 +57,6 @@ public:
 
 	SDL_Texture* sprites = nullptr;
 	Animation pikachu;
+	Animation makuhita;
 
 };

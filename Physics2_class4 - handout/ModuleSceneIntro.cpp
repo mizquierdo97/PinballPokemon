@@ -17,18 +17,6 @@ ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Modul
 
 ModuleSceneIntro::~ModuleSceneIntro()
 {
-	
-
-
-
-
-
-
-
-
-
-	// - ANIMATIONS - pokemons  - END -
-
 }
 
 // Load assets
@@ -96,8 +84,7 @@ bool ModuleSceneIntro::Start()
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
 
 
-	//////SPRITES
-
+	//////  -------------------SPRITES--------------------
 
 	sprites = App->textures->Load("Game/pinball/pokemons.png");
 
@@ -106,6 +93,14 @@ bool ModuleSceneIntro::Start()
 	pikachu.PushBack({ 46,21,25,24 });
 	pikachu.PushBack({ 72,21,26,28 });
 	pikachu.speed = 0.04f;
+
+
+	makuhita.PushBack({ 169,15,33,34 });
+	makuhita.PushBack({ 206,19,31,37 });
+	makuhita.speed = 0.04f;
+
+	//////  -------------------SPRITES--------------------
+
 	return ret;
 }
 
@@ -234,8 +229,9 @@ update_status ModuleSceneIntro::Update()
 	}
 
 
-
+	// --POKEMONS--
 	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
 
 
 	return UPDATE_CONTINUE;
