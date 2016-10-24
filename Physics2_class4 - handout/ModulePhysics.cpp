@@ -36,25 +36,6 @@ bool ModulePhysics::Start()
 	b2BodyDef bd;
 	ground = world->CreateBody(&bd);
 
-	// big static circle as "ground" in the middle of the screen
-
-
-	/*int x = SCREEN_WIDTH / 2;
-	int y = SCREEN_HEIGHT / 1.5f;
-	int diameter = SCREEN_WIDTH / 2;
-
-	b2BodyDef body;
-	body.type = b2_staticBody;
-	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
-
-	b2Body* big_ball = world->CreateBody(&body);
-
-	b2CircleShape shape;
-	shape.m_radius = PIXEL_TO_METERS(diameter) * 0.5f;
-
-	b2FixtureDef fixture;
-	fixture.shape = &shape;
-	big_ball->CreateFixture(&fixture);*/
 	
 	return true;
 }
@@ -64,63 +45,20 @@ update_status ModulePhysics::PreUpdate()
 {
 	world->Step(1.0f / 60.0f, 6, 2);
 	static bool temp = false;
-	if (test2 == true &&test == true) {
+	if (test2 == true && test == true) {
 
-		if (temp == true) {
-			App->scene_intro->Shape_Map1();
-			temp = !temp;
-			
-		}
-		else {
-			App->scene_intro->Shape_Map2();
-			temp = !temp;
-		}
-		test2 = false;
-	}
-	 int time = 31;
-	if (test == true) {
-		time++;
-	}
-	for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
-	{
-		static bool inside = false;
-		//static bool temp = false;
+	
+		for (b2Contact* c = world->GetContactList(); c; c = c->GetNext())
+		{
+			static bool inside = false;
+			//static bool temp = false;
 
-		if (c->GetFixtureA()->IsSensor() && c->IsTouching()) {
-			const b2Vec2 vel = App->scene_intro->ball->body->GetLinearVelocity();
-			if (time >= 30 && ((vel.x >1.4 || vel.y >1.4) || (vel.x <-1.4 || vel.y <-1.4))) {
-				test = true;
-				time = 0;
-			}
-			PhysBody* pb1 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
-			PhysBody* pb2 = (PhysBody*)c->GetFixtureA()->GetBody()->GetUserData();
-			if (pb1 && pb2) {
-				if (test2 == true) {
-					/*	//pb1->listener->OnCollision(pb1, pb2);
-						
-							if (temp == false) {
-								App->scene_intro->Shape_Map2();
-								//map = !map;
-								inside = false;
-								temp = !temp;
-								test2 = false;
-							}
-							else if (temp == true) {
-								App->scene_intro->Shape_Map1();
-								inside = false;
-								temp = !temp;
-								test2 = false;
-							}*/
-						
-
-					}
-
-				}
-				
-					}
-				}
-			
+			if (c->GetFixtureA()->IsSensor() && c->IsTouching()) {
 		
+			}
+		}
+
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -414,12 +352,11 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
 	
+	if (physA == App->scene_intro->sensor) {
+		App->scene_intro->change = true;
+	}
 
-		//App->scene_intro->OnCollision(physA, physB);
 	
-	/*if (physA->body->GetPosition().y < 300 && physB && physA) {
-		App->scene_intro->OnCollision(physA, physB);
-	}*/
 	if(physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
 
@@ -432,10 +369,7 @@ void ModulePhysics::EndContact(b2Contact * contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
-	if (test == true) {
-		test2 = true;
-		test = false;
-	}
+
 	if (physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
 

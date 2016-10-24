@@ -31,63 +31,55 @@ bool ModuleSceneIntro::Start()
 	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	background = App->textures->Load("pinball/rubys.png");
 
-	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
 
-	
-Shape_Map1();
+	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
+	sensor2 = App->physics->CreateRectangleSensor(150, 187, 5, 5);
+	//Start Shape Map
+	Shape_Map1();
+
+
 	ball = App->physics->CreateCircle(250,380, 6);
 	ball->body->IsBullet();
 
+
+	////RIGHT
 	right = App->physics->CreateRectangle(149,376, 28,7);
+	
+	
+	
 	point_right = App->physics->CreateCircle(149, 376, 2);
-	//point_right->body->CreateFixture();
-	//ball->body->SetType(b2_staticBody);
-	right->body->SetType(b2_dynamicBody);
 	point_right->body->SetType(b2_staticBody);
 
-	
-
-	right->body->IsBullet();
-
-	left->body->IsBullet();
 
 	revoluteJointDef_right.bodyA = right->body;
 	revoluteJointDef_right.bodyB = point_right->body;
-	//revoluteJointDef_left.referenceAngle = 0;
 	revoluteJointDef_right.referenceAngle = 0 * DEGTORAD;
 	revoluteJointDef_right.enableLimit = true;
 	revoluteJointDef_right.lowerAngle = -30 * DEGTORAD;
 	revoluteJointDef_right.upperAngle = 30 * DEGTORAD;
-
 	revoluteJointDef_right.localAnchorA.Set(PIXEL_TO_METERS(13), 0);
 	revoluteJointDef_right.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_right = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_right);
 
+
+	////LEFT
 	left = App->physics->CreateRectangle(89, 376, 28, 7);
 
+
 	point_left = App->physics->CreateCircle(87, 376, 2);
-	//left->body->SetType(b2_staticBody);
 	point_left->body->SetType(b2_staticBody);
 	
 
+
 	revoluteJointDef_left.bodyA = left->body;
 	revoluteJointDef_left.bodyB = point_left->body;
-	//revoluteJointDef_left.referenceAngle = 0;
 	revoluteJointDef_left.referenceAngle = 0 * DEGTORAD;
 	revoluteJointDef_left.enableLimit = true;
 	revoluteJointDef_left.lowerAngle = -30 * DEGTORAD;
 	revoluteJointDef_left.upperAngle = 30 * DEGTORAD;
-	
 	revoluteJointDef_left.localAnchorA.Set(PIXEL_TO_METERS(-13), 0);
 	revoluteJointDef_left.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
-	//left->body->SetType(b2_dynamicBody);
-
-	
-	//left = App->physics->CreateRectangle(150, 300, 25, 5);
-	
-	//left->body->SetType(b2_staticBody);
-
 	
 
 	return ret;
@@ -123,7 +115,6 @@ update_status ModuleSceneIntro::Update()
 		b2Vec2 force = b2Vec2(0, -400);
 		right->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
-
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
@@ -144,23 +135,20 @@ update_status ModuleSceneIntro::Update()
 			Shape_Map2();
 		temp = !temp;
 	}
-	/*if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	{
-		ray_on = !ray_on;
-		ray.x = App->input->GetMouseX();
-		ray.y = App->input->GetMouseY();
-	}*/
 
-	/*if(App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
-	{
-		circles.add(App->physics->CreateCircle(App->input->GetMouseX(), App->input->GetMouseY(), 5));
-		circles.getLast()->data->listener = this;
-	}*/
-
-	if(App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
-	{
-		boxes.add(App->physics->CreateRectangle(App->input->GetMouseX(), App->input->GetMouseY(), 10, 10));
+	if (change == true) {
+		if (shape_map == true) {
+			Shape_Map1();
+			shape_map = !shape_map;
+			change = !change;
+		}
+		else {
+			Shape_Map2();
+			shape_map = !shape_map;
+			change = !change;
+		}
 	}
+	
 
 	
 
@@ -203,15 +191,7 @@ update_status ModuleSceneIntro::Update()
 		c = c->next;
 	}
 
-	/*c = ricks.getFirst();
-
-	while(c != NULL)
-	{
-		int x, y;
-		c->data->GetPosition(x, y);
-		App->renderer->Blit(rick, x, y, NULL, 1.0f, c->data->GetRotation());
-		c = c->next;
-	}*/
+	
 
 	// ray -----------------
 	if(ray_on == true)
@@ -235,25 +215,7 @@ void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 
 	App->audio->PlayFx(bonus_fx);
 	static bool temp = true;
-	if (temp == true) {
-		Shape_Map1();
 
-	}
-	if (temp == false) {
-		Shape_Map2();
-	}
-	/*
-	if(bodyA)
-	{
-		bodyA->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}
-
-	if(bodyB)
-	{
-		bodyB->GetPosition(x, y);
-		App->renderer->DrawCircle(x, y, 50, 100, 100, 100);
-	}*/
 }
 
 void ModuleSceneIntro::Shape_Map1()

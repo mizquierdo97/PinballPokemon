@@ -32,8 +32,13 @@ public:
 	b2RevoluteJointDef revoluteJointDef_right;
 	b2RevoluteJointDef revoluteJointDef_left;
 
+	bool shape_map = false;
+	bool change = false;
+
 
 	PhysBody* sensor;
+	PhysBody* sensor2;
+
 	bool sensed;
 
 	SDL_Texture* background;
