@@ -99,6 +99,11 @@ bool ModuleSceneIntro::Start()
 	makuhita.PushBack({ 206,19,31,37 });
 	makuhita.speed = 0.04f;
 
+	cyndaquil.PushBack({ 17,145,31,39 });
+	cyndaquil.PushBack({ 55,146,33,41 });
+	cyndaquil.speed = 0.04f;
+
+
 	//////  -------------------SPRITES--------------------
 
 	return ret;
@@ -232,6 +237,7 @@ update_status ModuleSceneIntro::Update()
 	// --POKEMONS--
 	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
 
 
 	return UPDATE_CONTINUE;

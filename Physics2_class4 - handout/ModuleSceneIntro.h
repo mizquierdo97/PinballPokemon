@@ -58,5 +58,6 @@ public:
 	SDL_Texture* sprites = nullptr;
 	Animation pikachu;
 	Animation makuhita;
+	Animation cyndaquil;
 
 };
