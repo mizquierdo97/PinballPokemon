@@ -61,5 +61,7 @@ public:
 	Animation cyndaquil;
 	Animation spoink_relax;
 	Animation spoink_fast;
+	Animation chic;
+	Animation shark;
 
 };

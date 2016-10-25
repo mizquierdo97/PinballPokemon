@@ -143,6 +143,14 @@ bool ModuleSceneIntro::Start()
 	spoink_fast.PushBack({ 83,64,21,36 });
 	spoink_fast.speed = 0.2f;
 
+	chic.PushBack({ 148,83,21,42 });
+	chic.PushBack({ 173,82,21,44 });
+	chic.speed = 0.04f;
+
+	shark.PushBack({ 1,2,42,45 });
+	shark.PushBack({ 206,78,40,48 });
+	shark.speed = 0.01f;
+
 
 	//////  -------------------SPRITES--------------------
 
@@ -291,6 +299,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) != KEY_REPEAT)
 	{
@@ -301,7 +310,7 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
 	}
 	
-
+	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
 
 	return UPDATE_CONTINUE;
 }
