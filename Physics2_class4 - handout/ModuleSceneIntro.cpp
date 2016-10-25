@@ -151,6 +151,16 @@ bool ModuleSceneIntro::Start()
 	shark.PushBack({ 206,78,40,48 });
 	shark.speed = 0.01f;
 
+	ballena.PushBack({ 150,53,25,23 });
+	ballena.PushBack({ 184,53,25,23 });
+	ballena.speed = 0.04;
+
+	square_pika.PushBack({ 118,147,17,18 });
+	square_pika.PushBack({ 138,147,17,18 });
+	square_pika.PushBack({ 162,147,17,18 });
+	square_pika.PushBack({ 138,147,17,18 });
+	square_pika.speed = 0.1;
+
 
 	//////  -------------------SPRITES--------------------
 
@@ -300,6 +310,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
 
 	if (App->input->GetKey(SDL_SCANCODE_Z) != KEY_REPEAT)
 	{
@@ -311,6 +322,8 @@ update_status ModuleSceneIntro::Update()
 	}
 	
 	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
+
+	App->renderer->Blit(sprites, 210, 145, &(square_pika.GetCurrentFrame()), 0.01f);
 
 	return UPDATE_CONTINUE;
 }

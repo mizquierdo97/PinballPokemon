@@ -63,5 +63,8 @@ public:
 	Animation spoink_fast;
 	Animation chic;
 	Animation shark;
+	Animation ballena;
+
+	Animation square_pika;
 
 };
