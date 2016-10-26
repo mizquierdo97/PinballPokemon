@@ -351,10 +351,7 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
-	
-	if (physA == App->scene_intro->sensor || physA == App->scene_intro->sensor2) {
-		App->scene_intro->change = true;
-	}
+
 
 	
 	if(physA && physA->listener != NULL)
@@ -369,6 +366,11 @@ void ModulePhysics::EndContact(b2Contact * contact)
 	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
+
+
+	if (physA == App->scene_intro->sensor || physA == App->scene_intro->sensor2) {
+		App->scene_intro->change = true;
+	}
 
 	if (physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);

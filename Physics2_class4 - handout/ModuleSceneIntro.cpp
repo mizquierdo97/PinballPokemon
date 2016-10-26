@@ -33,7 +33,9 @@ bool ModuleSceneIntro::Start()
 	rick = App->textures->Load("game/pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
 	background = App->textures->Load("game/pinball/ruby.png");
-
+	loop = App->textures->Load("game/pinball/loopup.png");
+	font = App->textures->Load("game/pinball/font.png");
+	take_font();
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
 	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
@@ -177,6 +179,9 @@ bool ModuleSceneIntro::Start()
 
 	// - ANIMATIONS - pokemons
 
+	sprite_ball.PushBack({106,119,16,16});
+
+
 	pikachu.PushBack({ 46,21,25,24 });
 	pikachu.PushBack({ 72,21,26,28 });
 	pikachu.speed = 0.04f;
@@ -240,6 +245,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(0, -150);
 		ball->body->ApplyForceToCenter(force, 1);
+		
 	}
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(-40, 0);
@@ -256,6 +262,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
 		b2Vec2 force = b2Vec2(0, -150);
 		ball->body->ApplyForceToCenter(force, 1);
+		
 
 
 
@@ -268,6 +275,7 @@ update_status ModuleSceneIntro::Update()
 		right->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
 		pikachu_x = 197;
+	
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
@@ -292,15 +300,19 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (change == true) {
-		if (shape_map == true) {
-			Shape_Map1();
-			shape_map = !shape_map;
-			change = !change;
-		}
-		else {
-			Shape_Map2();
-			shape_map = !shape_map;
-			change = !change;
+		if (ball->body->GetLinearVelocity().y < -0.1 || ball->body->GetLinearVelocity().y > 1.9) {
+			if (shape_map == true) {
+				Shape_Map1();
+				shape_map = !shape_map;
+				change = !change;
+				loop_blit = true;
+			}
+			else {
+				Shape_Map2();
+				shape_map = !shape_map;
+				change = !change;
+				loop_blit = false;
+			}
 		}
 	}
 
@@ -397,11 +409,21 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
 	}
 	
-	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
+	
 
 	App->renderer->Blit(sprites, 210, 145, &(square_pika.GetCurrentFrame()), 0.01f);
+	square_pika.speed = 0.0f;
+	App->renderer->Blit(sprites, ball->body->GetPosition().x*25 - 7 , ball->body->GetPosition().y*25 -7, &(sprite_ball.GetCurrentFrame()));
+	if (loop_blit == true) {
+		App->renderer->Blit(loop, 0, 26);
+	}
+	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
 
+	//BLITFONT
+	//App->renderer->Blit(font, 1, 1, &numbers[4]);
+	blit_font();
 	return UPDATE_CONTINUE;
+
 }
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
@@ -758,5 +780,26 @@ void ModuleSceneIntro::Shape_Map2()
 	ricks.add(App->physics->CreateChain(0, 0, shape1, 36));
 
 
+
+}
+
+void ModuleSceneIntro::take_font()
+{
+	
+	for (int x = 0; x< 10; x++) {
+		numbers[x] = { x*13 + 3, 3, 13,24 };
+	}
+
+
+}
+
+void ModuleSceneIntro::blit_font() {
+	int score_temp = score;
+	for (int i = 8; i >= 0; i--) {
+	
+		int temp = score_temp % 10;
+		App->renderer->Blit(font, i * 13 + 3, 1, &numbers[temp]);
+		score_temp = score_temp / 10;
+	}
 
 }

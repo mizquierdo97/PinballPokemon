@@ -21,6 +21,8 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void Shape_Map1();
 	void Shape_Map2();
+	void take_font();
+	void blit_font();
 public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
@@ -37,16 +39,21 @@ public:
 	b2Body* body_bumper2;
 	b2Body* body_bumper3;
 
+	SDL_Rect numbers[10];
+	uint score = 00000000;
+
 	PhysBody* launcher;
 	PhysBody* staticLauncher;
 	b2PrismaticJointDef prismaticJoint_launcher;
 
 	bool shape_map = false;
 	bool change = false;
+	bool loop_blit = true;
 
 
 	PhysBody* sensor;
 	PhysBody* sensor2;
+	
 
 	bool sensed;
 
@@ -54,6 +61,8 @@ public:
 	SDL_Texture* circle;
 	SDL_Texture* box;
 	SDL_Texture* rick;
+	SDL_Texture* loop;
+	SDL_Texture* font;
 	uint bonus_fx;
 	p2Point<int> ray;
 	bool ray_on;
@@ -68,6 +77,8 @@ public:
 	Animation chic;
 	Animation shark;
 	Animation ballena;
+	Animation sprite_ball;
+
 
 	Animation square_pika;
 
