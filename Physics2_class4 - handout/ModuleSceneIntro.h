@@ -21,6 +21,7 @@ public:
 	void OnCollision(PhysBody* bodyA, PhysBody* bodyB);
 	void Shape_Map1();
 	void Shape_Map2();
+	void Reset_ball();
 	void take_font();
 	void blit_font();
 public:
@@ -49,11 +50,12 @@ public:
 	bool shape_map = false;
 	bool change = false;
 	bool loop_blit = true;
+	bool reset = false;
 
 	bool square = false;
 	PhysBody* sensor;
 	PhysBody* sensor2;
-	
+	PhysBody* s_reset;
 
 	PhysBody* sensor_square;
 	PhysBody* sensor_sout;

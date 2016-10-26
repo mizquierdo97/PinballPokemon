@@ -41,6 +41,7 @@ bool ModuleSceneIntro::Start()
 	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
 	sensor_square = App->physics->CreateRectangleSensor(218, 157, 5, 5);
 	sensor_sout = App->physics->CreateRectangleSensor(190, 260, 5, 5);
+	s_reset = App->physics->CreateRectangleSensor(100, 430, 200, 20);
 	//Start Shape Map
 	Shape_Map1();
 
@@ -49,7 +50,8 @@ bool ModuleSceneIntro::Start()
 	
 
 	////RIGHT
-	right = App->physics->CreateRectangle(149, 376, 28, 7);
+
+	right = App->physics->CreateRectangle(149, 376, 26, 7);
 
 
 
@@ -69,7 +71,7 @@ bool ModuleSceneIntro::Start()
 
 
 	////LEFT
-	left = App->physics->CreateRectangle(89, 376, 28, 7);
+	left = App->physics->CreateRectangle(89, 376, 26, 7);
 
 
 	point_left = App->physics->CreateCircle(87, 376, 2);
@@ -132,20 +134,53 @@ bool ModuleSceneIntro::Start()
 
 
 	//SLINGSHOT
+	
+	//1
+	b2BodyDef slingshot1;
+	slingshot1.type = b2_staticBody; //this will be a dynamic body
+	slingshot1.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //a little to the left
 
-	b2BodyDef slingshot_r;
-	slingshot_r.type = b2_dynamicBody; //this will be a dynamic body
-	slingshot_r.position.Set(-10, 20); //a little to the left
+	b2Body* body_slingshot1 = App->physics->world->CreateBody(&slingshot1);
+	b2Vec2 vertices1[3];
+	vertices1[0].Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	vertices1[1].Set(PIXEL_TO_METERS(-10), PIXEL_TO_METERS(10));
+	vertices1[2].Set(PIXEL_TO_METERS(-20), PIXEL_TO_METERS(22));
 
-	b2Body* body_slingshot_r = App->physics->world->CreateBody(&slingshot_r);
 
-
-
+	b2PolygonShape shape_slingshot1;
+	shape_slingshot1.Set(vertices1, 3); //pass array to the shape
+	b2FixtureDef fixture_slingshot1;
+	fixture_slingshot1.shape = &shape_slingshot1; //change the shape of the fixture
+	slingshot1.position.Set(PIXEL_TO_METERS(173), PIXEL_TO_METERS(318)); //in the middle
+	b2Body* dynamicBody2_l = App->physics->world->CreateBody(&slingshot1);
+	fixture_slingshot1.restitution = 2;
+	dynamicBody2_l->CreateFixture(&fixture_slingshot1); //add a fixture to the body
 	//////////Prismatic Joint
 	launcher = App->physics->CreateRectangle(243, 380, 15, 5);
 	staticLauncher = App->physics->CreateRectangle(243, 390, 15, 5);
 	staticLauncher->body->SetType(b2_staticBody);
 	//launcher->body->SetType(b2_kinematicBody);
+
+	//2
+	b2BodyDef slingshot2;
+	slingshot2.type = b2_staticBody; //this will be a dynamic body
+	slingshot2.position.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //a little to the left
+
+	b2Body* body_slingshot2 = App->physics->world->CreateBody(&slingshot2);
+	b2Vec2 vertices2[3];
+	vertices2[0].Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
+	vertices2[1].Set(PIXEL_TO_METERS(10), PIXEL_TO_METERS(10));
+	vertices2[2].Set(PIXEL_TO_METERS(20), PIXEL_TO_METERS(22));
+
+
+	b2PolygonShape shape_slingshot2;
+	shape_slingshot2.Set(vertices2, 3); //pass array to the shape
+	b2FixtureDef fixture_slingshot2;
+	fixture_slingshot2.shape = &shape_slingshot2; //change the shape of the fixture
+	slingshot2.position.Set(PIXEL_TO_METERS(66), PIXEL_TO_METERS(318)); //in the middle
+	b2Body* dynamicBody2_r = App->physics->world->CreateBody(&slingshot2);
+	fixture_slingshot2.restitution = 2;
+	dynamicBody2_r->CreateFixture(&fixture_slingshot2); //add a fixture to the body
 
 
 
@@ -275,7 +310,7 @@ update_status ModuleSceneIntro::Update()
 
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-		b2Vec2 force = b2Vec2(0, -400);
+		b2Vec2 force = b2Vec2(0, -200);
 		right->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
 		pikachu_x = 197;
@@ -287,7 +322,7 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-		b2Vec2 force = b2Vec2(0, -400);
+		b2Vec2 force = b2Vec2(0, -200);
 		left->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_left.lowerAngle = 30 * DEGTORAD;
 		pikachu_x = 20;
@@ -318,6 +353,11 @@ update_status ModuleSceneIntro::Update()
 				loop_blit = false;
 			}
 		}
+	}
+
+	if (reset == true) {
+		Reset_ball();
+		reset = false;
 	}
 
 	static uint time = 0;
@@ -807,6 +847,13 @@ void ModuleSceneIntro::Shape_Map2()
 
 
 
+}
+
+void ModuleSceneIntro::Reset_ball()
+{
+	ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS(243), PIXEL_TO_METERS(350)), 0);
+	ball->body->SetAngularVelocity(0);
+	ball->body->SetLinearVelocity(b2Vec2(0, 0));
 }
 
 void ModuleSceneIntro::take_font()

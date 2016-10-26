@@ -360,7 +360,9 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 		App->scene_intro->square = true;
 	}
 
-
+	if (physA == App->scene_intro->s_reset) {
+		App->scene_intro->reset = true;
+	}
 	
 	if(physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
@@ -379,6 +381,7 @@ void ModulePhysics::EndContact(b2Contact * contact)
 	if (physA == App->scene_intro->sensor || physA == App->scene_intro->sensor2) {
 		App->scene_intro->change = true;
 	}
+
 
 	if (physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);
