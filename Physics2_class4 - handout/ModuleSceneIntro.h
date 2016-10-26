@@ -50,10 +50,14 @@ public:
 	bool change = false;
 	bool loop_blit = true;
 
-
+	bool square = false;
 	PhysBody* sensor;
 	PhysBody* sensor2;
 	
+
+	PhysBody* sensor_square;
+	PhysBody* sensor_sout;
+
 
 	bool sensed;
 
@@ -81,5 +85,6 @@ public:
 
 
 	Animation square_pika;
+	Animation square_p2;
 
 };
