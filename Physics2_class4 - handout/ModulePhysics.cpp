@@ -356,6 +356,14 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 		App->scene_intro->change = true;
 	}
 
+
+	if (physA == App->scene_intro->sensor_square) {
+
+		App->scene_intro->square_pika.speed = 0.2;
+		App->scene_intro->square = true;
+	}
+
+
 	
 	if(physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);

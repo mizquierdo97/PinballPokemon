@@ -37,6 +37,8 @@ bool ModuleSceneIntro::Start()
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
 	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
+	sensor_square = App->physics->CreateRectangleSensor(218, 157, 5, 5);
+	sensor_sout = App->physics->CreateRectangleSensor(190, 260, 5, 5);
 	//Start Shape Map
 	Shape_Map1();
 
@@ -217,6 +219,8 @@ bool ModuleSceneIntro::Start()
 	square_pika.PushBack({ 162,147,17,18 });
 	square_pika.PushBack({ 138,147,17,18 });
 	square_pika.speed = 0.1;
+
+	square_p2.PushBack({ 118,147,17,18 });
 
 
 	//////  -------------------SPRITES--------------------
@@ -399,7 +403,26 @@ update_status ModuleSceneIntro::Update()
 	
 	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
 
-	App->renderer->Blit(sprites, 210, 145, &(square_pika.GetCurrentFrame()), 0.01f);
+	//square pikachu
+	static int temp = 0;
+	if (temp < 170 && square == true)
+	{
+		App->renderer->Blit(sprites, 210, 145, &(square_pika.GetCurrentFrame()), 0.01f);
+	}
+	
+	if (square == false)
+	{
+		App->renderer->Blit(sprites, 210, 145, &(square_p2.GetCurrentFrame()), 0.00f);
+	}
+
+	if (temp > 170)
+	{
+		square = false;
+		temp = 0;
+	}
+	temp++;
+
+
 
 	return UPDATE_CONTINUE;
 }

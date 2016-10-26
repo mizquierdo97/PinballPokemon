@@ -44,9 +44,11 @@ public:
 	bool shape_map = false;
 	bool change = false;
 
-
+	bool square = false;
 	PhysBody* sensor;
 	PhysBody* sensor2;
+	PhysBody* sensor_square;
+	PhysBody* sensor_sout;
 
 	bool sensed;
 
@@ -70,5 +72,6 @@ public:
 	Animation ballena;
 
 	Animation square_pika;
+	Animation square_p2;
 
 };
