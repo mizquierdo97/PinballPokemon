@@ -33,6 +33,10 @@ public:
 	b2RevoluteJointDef revoluteJointDef_right;
 	b2RevoluteJointDef revoluteJointDef_left;
 
+	b2Body* body_bumper1;
+	b2Body* body_bumper2;
+	b2Body* body_bumper3;
+
 	PhysBody* launcher;
 	PhysBody* staticLauncher;
 	b2PrismaticJointDef prismaticJoint_launcher;

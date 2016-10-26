@@ -7,6 +7,7 @@
 #include "ModuleAudio.h"
 #include "ModulePhysics.h"
 #include "animation.h"
+#include <math.h>
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -41,8 +42,7 @@ bool ModuleSceneIntro::Start()
 
 
 	ball = App->physics->CreateCircle(250, 380, 6);
-	ball->body->IsBullet();
-
+	
 
 	////RIGHT
 	right = App->physics->CreateRectangle(149, 376, 28, 7);
@@ -83,11 +83,68 @@ bool ModuleSceneIntro::Start()
 	revoluteJointDef_left.localAnchorB.Set(0, 0);
 	b2RevoluteJoint* joint_left = (b2RevoluteJoint*)App->physics->world->CreateJoint(&revoluteJointDef_left);
 
+
+	//BUMPERS
+	//1
+	b2BodyDef bumper1;
+	bumper1.type = b2_kinematicBody; //this will be a dynamic body
+	bumper1.position.Set(PIXEL_TO_METERS(130), PIXEL_TO_METERS(127)); //a little to the left
+
+	body_bumper1 = App->physics->world->CreateBody(&bumper1);
+	b2CircleShape shape_bumper1;
+	shape_bumper1.m_p.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //position, relative to body position
+	shape_bumper1.m_radius = PIXEL_TO_METERS(5); //radius
+	b2FixtureDef f_bumper1;
+	f_bumper1.shape = &shape_bumper1; //this is a pointer to the shape above
+	body_bumper1->CreateFixture(&f_bumper1); //add a fixture to the body
+	
+	//2
+	b2BodyDef bumper2;
+	bumper2.type = b2_kinematicBody; //this will be a dynamic body
+	bumper2.position.Set(PIXEL_TO_METERS(160), PIXEL_TO_METERS(127)); //a little to the left
+
+	body_bumper2 = App->physics->world->CreateBody(&bumper2);
+	b2CircleShape shape_bumper2;
+	shape_bumper2.m_p.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //position, relative to body position
+	shape_bumper2.m_radius = PIXEL_TO_METERS(5); //radius
+	b2FixtureDef f_bumper2;
+	f_bumper2.shape = &shape_bumper2; //this is a pointer to the shape above
+	body_bumper2->CreateFixture(&f_bumper2); //add a fixture to the body
+											 
+
+	 //3
+	b2BodyDef bumper3;
+	bumper3.type = b2_kinematicBody; //this will be a dynamic body
+	bumper3.position.Set(PIXEL_TO_METERS(145), PIXEL_TO_METERS(152)); //a little to the left
+	
+	body_bumper3 = App->physics->world->CreateBody(&bumper3);
+	b2CircleShape shape_bumper3;
+	shape_bumper3.m_p.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //position, relative to body position
+	shape_bumper3.m_radius = PIXEL_TO_METERS(5); //radius
+	b2FixtureDef f_bumper3;
+	f_bumper3.shape = &shape_bumper3; //this is a pointer to the shape above
+	body_bumper3->CreateFixture(&f_bumper3); //add a fixture to the body
+
+
+
+	//SLINGSHOT
+
+	b2BodyDef slingshot_r;
+	slingshot_r.type = b2_dynamicBody; //this will be a dynamic body
+	slingshot_r.position.Set(-10, 20); //a little to the left
+
+	b2Body* body_slingshot_r = App->physics->world->CreateBody(&slingshot_r);
+
+
+
 	//////////Prismatic Joint
 	launcher = App->physics->CreateRectangle(243, 380, 15, 5);
 	staticLauncher = App->physics->CreateRectangle(243, 390, 15, 5);
 	staticLauncher->body->SetType(b2_staticBody);
 	//launcher->body->SetType(b2_kinematicBody);
+
+
+
 
 	prismaticJoint_launcher.collideConnected = true;
 	prismaticJoint_launcher.enableLimit = true;
@@ -247,6 +304,25 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+	static uint time = 0;
+	time++;
+	float posx = cos((time+ 0)/45.0)* 20;
+	float posy = sin((time + 0) / 45.0) * 20;
+	b2Vec2 pos = b2Vec2(PIXEL_TO_METERS(posx +PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+
+	body_bumper1->SetTransform(pos,0);
+
+	posx = cos((time + 90) / 45.0) * 20;
+	 posy = sin((time + 90) / 45.0) * 20;
+	 pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+
+	body_bumper2->SetTransform(pos, 0);
+	
+	posx = cos((time + 180) / 45.0) * 20;
+	posy = sin((time + 180) / 45.0) * 20;
+	pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+
+	body_bumper3->SetTransform(pos, 0);
 
 
 
@@ -493,7 +569,7 @@ void ModuleSceneIntro::Shape_Map1()
 		152, 77,
 		149, 74
 	};
-
+/*
 	int shape8[42] = {
 		191, 227,
 		191, 241,
@@ -538,6 +614,41 @@ void ModuleSceneIntro::Shape_Map1()
 		184, 184,
 		181, 193,
 		177, 200
+	};*/
+
+	int shape8[64] = {
+		166, 101,
+		166, 82,
+		184, 94,
+		199, 115,
+		208, 143,
+		211, 175,
+		208, 204,
+		200, 225,
+		193, 241,
+		189, 238,
+		197, 220,
+		204, 197,
+		205, 170,
+		200, 171,
+		191, 186,
+		180, 216,
+		173, 223,
+		172, 211,
+		190, 176,
+		203, 150,
+		199, 137,
+		187, 138,
+		183, 151,
+		176, 172,
+		159, 199,
+		154, 199,
+		154, 188,
+		166, 170,
+		180, 142,
+		184, 131,
+		182, 109,
+		174, 104
 	};
 
 
@@ -565,8 +676,8 @@ void ModuleSceneIntro::Shape_Map1()
 	ricks.add(App->physics->CreateChain(0, 0, shape5, 16));
 	ricks.add(App->physics->CreateChain(0, 0, shape6, 14));
 	ricks.add(App->physics->CreateChain(0, 0, shape7, 10));
-	ricks.add(App->physics->CreateChain(0, 0, shape8, 42));
-	ricks.add(App->physics->CreateChain(0, 0, shape9, 34));
+	ricks.add(App->physics->CreateChain(0, 0, shape8, 64));
+	//ricks.add(App->physics->CreateChain(0, 0, shape9, 34));
 	ricks.add(App->physics->CreateChain(0, 0, rebote1, 6));
 	ricks.add(App->physics->CreateChain(0, 0, rebote2, 6));
 }
