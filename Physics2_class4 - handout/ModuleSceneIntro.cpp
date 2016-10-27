@@ -237,7 +237,7 @@ bool ModuleSceneIntro::Start()
 	prismaticJoint_launcher.enableLimit = true;
 	//prismaticJoint_launcher.type
 	
-	prismaticJoint_launcher.lowerTranslation = PIXEL_TO_METERS(30);
+	prismaticJoint_launcher.lowerTranslation = PIXEL_TO_METERS(25);
 	prismaticJoint_launcher.upperTranslation = PIXEL_TO_METERS(40);
 	
 	prismaticJoint_launcher.localAnchorA.Set(0, 0);
@@ -352,6 +352,7 @@ update_status ModuleSceneIntro::Update()
 
 	if (n_balls > 0) {
 
+		//CONTROLS
 		App->renderer->Blit(background, 0, 0);
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
 			b2Vec2 force = b2Vec2(0, -150);
@@ -362,12 +363,15 @@ update_status ModuleSceneIntro::Update()
 
 		static int pow = 0;
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-			pow += 3;
+			pow += 30;
 			//b2Vec2 force = b2Vec2(0, -150);
 			//ball->body->ApplyForceToCenter(force, 1);
 			if (pow > 300)
 				pow = 300;
 
+		}
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
+			launcher->body->ApplyForceToCenter(b2Vec2(0, -pow), 1);
 		}
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
 			b2Vec2 force = b2Vec2(0, -200);
@@ -401,6 +405,8 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+
+	//CHANGE_MAP SENSOR
 	if (change == true) {
 		if (ball->body->GetLinearVelocity().y < -0.1 || ball->body->GetLinearVelocity().y > 1.9) {
 			if (shape_map == true) {
@@ -418,11 +424,14 @@ update_status ModuleSceneIntro::Update()
 		}
 	}
 
+	//RESET
 	if (reset == true) {
 		Reset_ball();
 		reset = false;
 		block = false;
 	}
+
+	//COLLISION SOUNDS
 	if (bs_points == true) {
 		bs_points = false;
 		App->audio->PlayFx(s_points);
@@ -506,6 +515,8 @@ update_status ModuleSceneIntro::Update()
 			cyn_y -= 3;
 		}
 	}
+
+	//BUMPERS ROTATION
 	static uint time = 0;
 	time++;
 	float posx = cos((time+ 0)/45.0)* 20;
@@ -586,12 +597,6 @@ update_status ModuleSceneIntro::Update()
 
 
 	//--POKEMONS--
-	App->renderer->Blit(sprites, pikachu_x, 357, &(pikachu.GetCurrentFrame()), 0.01f);
-	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
-	App->renderer->Blit(sprites, 76, cyn_y, &(cyndaquil.GetCurrentFrame()), 0.01f);
-	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
-	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
-
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
 	{
 		App->renderer->Blit(sprites, 232, 352, &(spoink_relax.GetCurrentFrame()), 0.01f);
@@ -606,6 +611,13 @@ update_status ModuleSceneIntro::Update()
 	if (loop_blit == true) {
 		App->renderer->Blit(loop, 0, 26);
 	}
+
+	App->renderer->Blit(sprites, pikachu_x, 357, &(pikachu.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 76, cyn_y, &(cyndaquil.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
+
 
 	//door
 	static int temp_door = 0;
@@ -678,17 +690,7 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	/*if (bodyB->body == body_bumper1) {
-		bs_bumper = true;
-	}
-	if (bodyB->body == body_bumper2) {
-		bs_bumper = true;
-	}
-
-	if (bodyB->body == body_bumper3) {
-		bs_bumper = true;
-	}
-	*/
+	
 
 	App->audio->PlayFx(bonus_fx);
 	static bool temp = true;
