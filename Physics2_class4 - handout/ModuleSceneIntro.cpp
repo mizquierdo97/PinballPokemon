@@ -28,13 +28,13 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("game/pinball/wheel.png");
-	box = App->textures->Load("game/pinball/crate.png");
-	rick = App->textures->Load("game/pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
-	background = App->textures->Load("game/pinball/ruby.png");
-	loop = App->textures->Load("game/pinball/loopup.png");
-	font = App->textures->Load("game/pinball/font.png");
+	circle = App->textures->Load("Game/pinball/wheel.png");
+	box = App->textures->Load("Game/pinball/crate.png");
+	rick = App->textures->Load("Game/pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("Game/pinball/bonus.wav");
+	background = App->textures->Load("Game/pinball/ruby.png");
+	loop = App->textures->Load("Game/pinball/loopup.png");
+	font = App->textures->Load("Game/pinball/font.png");
 	take_font();
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
@@ -46,7 +46,7 @@ bool ModuleSceneIntro::Start()
 	Shape_Map1();
 
 
-	ball = App->physics->CreateCircle(250, 380, 6);
+	ball = App->physics->CreateCircle(250, 350, 6);
 	
 
 	////RIGHT
@@ -102,6 +102,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper1.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper1;
 	f_bumper1.shape = &shape_bumper1; //this is a pointer to the shape above
+	f_bumper1.restitution = 1;
 	body_bumper1->CreateFixture(&f_bumper1); //add a fixture to the body
 	
 	//2
@@ -114,7 +115,8 @@ bool ModuleSceneIntro::Start()
 	shape_bumper2.m_p.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //position, relative to body position
 	shape_bumper2.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper2;
-	f_bumper2.shape = &shape_bumper2; //this is a pointer to the shape above
+	f_bumper2.shape = &shape_bumper2;
+	f_bumper2.restitution = 1;//this is a pointer to the shape above
 	body_bumper2->CreateFixture(&f_bumper2); //add a fixture to the body
 											 
 
@@ -128,7 +130,8 @@ bool ModuleSceneIntro::Start()
 	shape_bumper3.m_p.Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0)); //position, relative to body position
 	shape_bumper3.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper3;
-	f_bumper3.shape = &shape_bumper3; //this is a pointer to the shape above
+	f_bumper3.shape = &shape_bumper3;
+	f_bumper3.restitution = 1;//this is a pointer to the shape above
 	body_bumper3->CreateFixture(&f_bumper3); //add a fixture to the body
 
 
@@ -156,9 +159,7 @@ bool ModuleSceneIntro::Start()
 	fixture_slingshot1.restitution = 2;
 	dynamicBody2_l->CreateFixture(&fixture_slingshot1); //add a fixture to the body
 	//////////Prismatic Joint
-	launcher = App->physics->CreateRectangle(243, 380, 15, 5);
-	staticLauncher = App->physics->CreateRectangle(243, 390, 15, 5);
-	staticLauncher->body->SetType(b2_staticBody);
+	
 	//launcher->body->SetType(b2_kinematicBody);
 
 	//2
@@ -185,30 +186,32 @@ bool ModuleSceneIntro::Start()
 
 
 
-	prismaticJoint_launcher.collideConnected = true;
-	prismaticJoint_launcher.enableLimit = true;
 
-
-
+	launcher = App->physics->CreateRectangle(243, 390, 15, 5);
+	staticLauncher = App->physics->CreateRectangle(243, 390, 15, 5);
+	//launcher = App->physics->CreateRectangle(100, 200, 15, 5);
+	//staticLauncher = App->physics->CreateRectangle(100, 200, 15, 5);
+	staticLauncher->body->SetType(b2_staticBody);
+	
 	prismaticJoint_launcher.bodyB = launcher->body;
 	prismaticJoint_launcher.bodyA = staticLauncher->body;
 
 
-
-	prismaticJoint_launcher.lowerTranslation = 1.0;
-	prismaticJoint_launcher.upperTranslation = 5.0;
-
-
+	prismaticJoint_launcher.collideConnected = false;
+	prismaticJoint_launcher.enableLimit = true;
+	//prismaticJoint_launcher.type
+	
+	prismaticJoint_launcher.lowerTranslation = PIXEL_TO_METERS(20);
+	prismaticJoint_launcher.upperTranslation = PIXEL_TO_METERS(35);
+	
 	prismaticJoint_launcher.localAnchorA.Set(0, 0);
 	prismaticJoint_launcher.localAnchorB.Set(0, 0);
 
 
-
-
-	prismaticJoint_launcher.localAxisA.Set(0, 0);
+	prismaticJoint_launcher.localAxisA.Set(0, -1);
 
 	b2PrismaticJoint* joint_launcher = (b2PrismaticJoint*)App->physics->world->CreateJoint(&prismaticJoint_launcher);
-
+	
 
 	//////  -------------------SPRITES--------------------
 
@@ -297,16 +300,21 @@ update_status ModuleSceneIntro::Update()
 
 	}
 
-
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN) {
-		b2Vec2 force = b2Vec2(0, -150);
-		ball->body->ApplyForceToCenter(force, 1);
+	static int pow = 0;
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+		pow += 3;
+		//b2Vec2 force = b2Vec2(0, -150);
+		//ball->body->ApplyForceToCenter(force, 1);
+		if (pow > 300)
+			pow = 300;
 		
-
-
-
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
+		b2Vec2 force = b2Vec2(0, -pow);
+		launcher->body->ApplyForceToCenter(force,1);
+
+	}
 
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
@@ -743,13 +751,13 @@ void ModuleSceneIntro::Shape_Map1()
 	int rebote1[6] = {
 		173, 318,
 		173, 337,
-		155, 348
+		154, 340
 	};
 
 	int rebote2[6] = {
 		66, 317,
 		66, 338,
-		84, 348
+		85, 340
 	};
 
 
