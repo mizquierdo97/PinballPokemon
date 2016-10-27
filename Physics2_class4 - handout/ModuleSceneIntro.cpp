@@ -31,11 +31,13 @@ bool ModuleSceneIntro::Start()
 	circle = App->textures->Load("pinball/wheel.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	
 	background = App->textures->Load("pinball/ruby.png");
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
 	font = App->textures->Load("pinball/font.png");
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	take_font();
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
@@ -103,7 +105,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper1.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper1;
 	f_bumper1.shape = &shape_bumper1; //this is a pointer to the shape above
-	f_bumper1.restitution = 1;
+	f_bumper1.restitution = 1,1;
 	body_bumper1->CreateFixture(&f_bumper1); //add a fixture to the body
 	
 	//2
@@ -117,7 +119,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper2.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper2;
 	f_bumper2.shape = &shape_bumper2;
-	f_bumper2.restitution = 1;//this is a pointer to the shape above
+	f_bumper2.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper2->CreateFixture(&f_bumper2); //add a fixture to the body
 											 
 
@@ -132,7 +134,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper3.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper3;
 	f_bumper3.shape = &shape_bumper3;
-	f_bumper3.restitution = 1;//this is a pointer to the shape above
+	f_bumper3.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper3->CreateFixture(&f_bumper3); //add a fixture to the body
 
 
@@ -266,6 +268,18 @@ bool ModuleSceneIntro::Start()
 
 	square_p2.PushBack({ 118,147,17,18 });
 
+	bumpers1.PushBack({ 103,20,26,26 });
+	bumpers1.PushBack({ 135,20,26,26 });
+	bumpers1.speed = 0.1f;
+
+	bumpers2.PushBack({ 103,20,26,26 });
+	bumpers2.PushBack({ 135,20,26,26 });
+	bumpers2.speed = 0.1f;
+
+	bumpers3.PushBack({ 103,20,26,26 });
+	bumpers3.PushBack({ 135,20,26,26 });
+	bumpers3.speed = 0.1f;
+
 	a_left.PushBack({ 10,113,34,26 });
 	a_right.PushBack({54,113,34,26 });
 
@@ -376,22 +390,24 @@ update_status ModuleSceneIntro::Update()
 	time++;
 	float posx = cos((time+ 0)/45.0)* 20;
 	float posy = sin((time + 0) / 45.0) * 20;
-	b2Vec2 pos = b2Vec2(PIXEL_TO_METERS(posx +PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	b2Vec2 pos = b2Vec2(PIXEL_TO_METERS(posx +PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper1->SetTransform(pos,0);
+	App->renderer->Blit(sprites,posx+137,posy+120,&bumpers1.GetCurrentFrame(), 0.01f);
 
 	posx = cos((time + 90) / 45.0) * 20;
 	 posy = sin((time + 90) / 45.0) * 20;
-	 pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	 pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper2->SetTransform(pos, 0);
+	App->renderer->Blit(sprites, posx + 137, posy + 120, &bumpers2.GetCurrentFrame(), 0.01f);
 	
 	posx = cos((time + 180) / 45.0) * 20;
 	posy = sin((time + 180) / 45.0) * 20;
-	pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper3->SetTransform(pos, 0);
-
+	App->renderer->Blit(sprites, posx + 137, posy + 120, &bumpers3.GetCurrentFrame(), 0.01f);
 
 
 
@@ -495,8 +511,11 @@ update_status ModuleSceneIntro::Update()
 	temp++;
 
 	//Blit right and left;
-	App->renderer->Blit(sprites, 81, 370, &a_left.GetCurrentFrame(), 0.00f,-45,5,10);
-	App->renderer->Blit(sprites, 122, 368, &a_right.GetCurrentFrame(), 0.00f,-45,25,10);
+	float32 r_angle = right->body->GetAngle();
+	float32 l_angle = left->body->GetAngle();
+	
+	App->renderer->Blit(sprites, 81, 371, &a_left.GetCurrentFrame(), 0.00f,RADTODEG * (l_angle) -35,5,10);
+	App->renderer->Blit(sprites, 122, 370, &a_right.GetCurrentFrame(), 0.00f,RADTODEG * r_angle + 35,55,10);
 
 	//BLITFONT
 	//App->renderer->Blit(font, 1, 1, &numbers[4]);

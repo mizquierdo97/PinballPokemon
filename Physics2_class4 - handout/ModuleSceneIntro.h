@@ -70,6 +70,7 @@ public:
 	SDL_Texture* loop;
 	SDL_Texture* font;
 	uint bonus_fx;
+	uint sound;
 	p2Point<int> ray;
 	bool ray_on;
 
@@ -86,6 +87,9 @@ public:
 	Animation sprite_ball;
 	Animation a_right;
 	Animation a_left;
+	Animation bumpers1;
+	Animation bumpers2;
+	Animation bumpers3;
 
 
 	Animation square_pika;
