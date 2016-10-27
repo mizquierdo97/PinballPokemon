@@ -367,6 +367,7 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 	if (physA == App->scene_intro->s_reset) {
 		App->scene_intro->reset = true;
+		App->scene_intro->n_balls--;
 	}
 
 	//SENSORS sound and score

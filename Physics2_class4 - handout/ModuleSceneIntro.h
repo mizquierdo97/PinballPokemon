@@ -65,6 +65,7 @@ public:
 	bool s_pikachu = false;
 	bool s_shark = false;
 
+	int n_balls = 3;
 	PhysBody* sensor;
 	PhysBody* sensor2;
 	PhysBody* s_reset;

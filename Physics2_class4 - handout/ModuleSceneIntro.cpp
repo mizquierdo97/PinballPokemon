@@ -29,24 +29,24 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 
-	circle = App->textures->Load("pinball/wheel.png");
+/*	circle = App->textures->Load("pinball/wheel.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
 	
 	background = App->textures->Load("pinball/ruby.png");
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
-	font = App->textures->Load("pinball/font.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	s_flipper = App->audio->LoadFx("pinball/Saver.wav");
-	s_bumper = App->audio->LoadFx("pinball/bonus.wav");
-	s_slingshot = App->audio->LoadFx("pinball/Pokemonhit.wav");
-	s_pokeball = App->audio->LoadFx("pinball/Pokeball land.wav");
-	s_pokemon = App->audio->LoadFx("pinball/Do.wav");
-	s_points = App->audio->LoadFx("pinball/Pling.wav");
+	font = App->textures->Load("pinball/font.png");*/
+	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	s_flipper = App->audio->LoadFx("game/pinball/Saver.wav");
+	s_bumper = App->audio->LoadFx("game/pinball/bonus.wav");
+	s_slingshot = App->audio->LoadFx("game/pinball/Pokemonhit.wav");
+	s_pokeball = App->audio->LoadFx("game/pinball/Pokeball land.wav");
+	s_pokemon = App->audio->LoadFx("game/pinball/Do.wav");
+	s_points = App->audio->LoadFx("game/pinball/Pling.wav");
 	
 	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	/*
+	
 	circle = App->textures->Load("game/pinball/wheel.png");
 	box = App->textures->Load("game/pinball/crate.png");
 	rick = App->textures->Load("game/pinball/rick_head.png");
@@ -55,7 +55,7 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("game/pinball/ruby.png");
 	loop = App->textures->Load("game/pinball/loopup.png");
 	font = App->textures->Load("game/pinball/font.png");
-	*/
+	
 	take_font();
 
 	// Sensors;
@@ -249,7 +249,7 @@ bool ModuleSceneIntro::Start()
 
 	//////  -------------------SPRITES--------------------
 
-	sprites = App->textures->Load("pinball/pokemons.png");
+	sprites = App->textures->Load("game/pinball/pokemons.png");
 
 	// - ANIMATIONS - pokemons
 
@@ -387,6 +387,7 @@ update_status ModuleSceneIntro::Update()
 		right->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
 		pikachu_x = 197;
+		sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS(210), PIXEL_TO_METERS(360)), 0);
 	
 	}
 
@@ -399,6 +400,7 @@ update_status ModuleSceneIntro::Update()
 		left->body->ApplyForceToCenter(force, 1);
 		revoluteJointDef_left.lowerAngle = 30 * DEGTORAD;
 		pikachu_x = 20;
+		sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS( 33), PIXEL_TO_METERS(360)),0);
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
@@ -468,18 +470,22 @@ update_status ModuleSceneIntro::Update()
 
 
 	static int  pikachu_time = 0;
-	if(s_pikachu == true){
-		b2Vec2 vel = ball->body->GetLinearVelocity();
-		if (pikachu_time < 200) {
-			
-			ball->body->SetLinearVelocity(b2Vec2(0, 0));
+	static int pika_count = 0;
+	if (pika_count < 2) {
+		if (s_pikachu == true) {
+			b2Vec2 vel = ball->body->GetLinearVelocity();
+			if (pikachu_time < 200) {
+
+				ball->body->SetLinearVelocity(b2Vec2(0, 0));
+			}
+			if (pikachu_time > 200) {
+				ball->body->SetLinearVelocity(b2Vec2(0, -100));
+				s_pikachu = false;
+				pikachu_time = 0;
+				pika_count++;
+			}
+			pikachu_time++;
 		}
-		if (pikachu_time > 200) {
-			ball->body->SetLinearVelocity(b2Vec2(0,-100));
-			s_pikachu = false;
-			pikachu_time = 0;
-		}
-		pikachu_time++;
 	}
 
 	static int shark_time = 0;
@@ -495,14 +501,21 @@ update_status ModuleSceneIntro::Update()
 		}
 		shark_time++;
 	}
-
+	static int count = 0;
+	static int cyn_y = 128;
 	if (s_cyndaquil == true) {
 		ball->body->SetLinearVelocity(b2Vec2(0, 0));
-		b2Vec2 pos = sen_cyndaquil->body->GetPosition();
-		sen_cyndaquil->body->SetTransform(b2Vec2(PIXEL_TO_METERS(pos.x -0.001), PIXEL_TO_METERS(pos.y - 0.001)),0);
 		s_cyndaquil = false;
+		if (count < 5) {
+			b2Vec2 pos = sen_cyndaquil->body->GetPosition();
+
+			sen_cyndaquil->body->SetTransform(b2Vec2(pos.x, pos.y - 0.2), 0);
+			
+			score += count * 1000;
+			count++;
+			cyn_y -= 3;
+		}
 	}
-	
 	static uint time = 0;
 	time++;
 	float posx = cos((time+ 0)/45.0)* 20;
@@ -585,7 +598,7 @@ update_status ModuleSceneIntro::Update()
 	//--POKEMONS--
 	App->renderer->Blit(sprites, pikachu_x, 357, &(pikachu.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
-	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
+	App->renderer->Blit(sprites, 76, cyn_y, &(cyndaquil.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
 
@@ -655,6 +668,11 @@ update_status ModuleSceneIntro::Update()
 	//BLITFONT
 	//App->renderer->Blit(font, 1, 1, &numbers[4]);
 	blit_font();
+
+
+	if (n_balls <= 0) {
+		App->renderer->Blit(background, 0, 0);
+	}
 	return UPDATE_CONTINUE;
 
 }
@@ -726,7 +744,7 @@ void ModuleSceneIntro::Shape_Map1()
 		216, 361,
 		216, 309,
 		209, 301,
-		193, 301,
+		193, 299,
 		192, 270,
 		205, 257,
 		215, 240,
