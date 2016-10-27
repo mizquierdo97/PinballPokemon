@@ -28,20 +28,52 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+
 	circle = App->textures->Load("pinball/wheel.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	
 	background = App->textures->Load("pinball/ruby.png");
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
 	font = App->textures->Load("pinball/font.png");
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	s_flipper = App->audio->LoadFx("pinball/Saver.wav");
+	s_bumper = App->audio->LoadFx("pinball/bonus.wav");
+	s_slingshot = App->audio->LoadFx("pinball/Pokemonhit.wav");
+	s_pokeball = App->audio->LoadFx("pinball/Pokeball land.wav");
+	s_pokemon = App->audio->LoadFx("pinball/Do.wav");
+	s_points = App->audio->LoadFx("pinball/Pling.wav");
+
+	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	/*
+	circle = App->textures->Load("game/pinball/wheel.png");
+	box = App->textures->Load("game/pinball/crate.png");
+	rick = App->textures->Load("game/pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	background = App->textures->Load("game/pinball/ruby.png");
+	background = App->textures->Load("game/pinball/ruby.png");
+	loop = App->textures->Load("game/pinball/loopup.png");
+	font = App->textures->Load("game/pinball/font.png");
+	*/
 	take_font();
 
+	// Sensors;
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
 	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
 	sensor_square = App->physics->CreateRectangleSensor(218, 157, 5, 5);
-	sensor_sout = App->physics->CreateRectangleSensor(190, 260, 5, 5);
+	sensor_door = App->physics->CreateRectangleSensor(220, 86, 5, 5);
+	sen_shark = App->physics->CreateRectangleSensor(198, 190, 5, 5);
+	sen_pikachu = App->physics->CreateRectangleSensor(33, 360, 5, 5);
+	sen_cyndaquil = App->physics->CreateRectangleSensor(90, 160, 5, 5);
+
+	sen_points1 = App->physics->CreateRectangleSensor(117, 85, 5, 5);
+	sen_points2 = App->physics->CreateRectangleSensor(138, 85, 5, 5);
+	sen_points3 = App->physics->CreateRectangleSensor(159, 85, 5, 5);
+	sen_points4 = App->physics->CreateRectangleSensor(76, 258, 5, 5);
+	sen_points5 = App->physics->CreateRectangleSensor(115, 170, 5, 5);
+	sen_points6 = App->physics->CreateRectangleSensor(157,200, 5, 5);
+
 	s_reset = App->physics->CreateRectangleSensor(100, 430, 200, 20);
 	//Start Shape Map
 	Shape_Map1();
@@ -103,7 +135,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper1.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper1;
 	f_bumper1.shape = &shape_bumper1; //this is a pointer to the shape above
-	f_bumper1.restitution = 1;
+	f_bumper1.restitution = 1,1;
 	body_bumper1->CreateFixture(&f_bumper1); //add a fixture to the body
 	
 	//2
@@ -117,7 +149,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper2.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper2;
 	f_bumper2.shape = &shape_bumper2;
-	f_bumper2.restitution = 1;//this is a pointer to the shape above
+	f_bumper2.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper2->CreateFixture(&f_bumper2); //add a fixture to the body
 											 
 
@@ -132,7 +164,7 @@ bool ModuleSceneIntro::Start()
 	shape_bumper3.m_radius = PIXEL_TO_METERS(5); //radius
 	b2FixtureDef f_bumper3;
 	f_bumper3.shape = &shape_bumper3;
-	f_bumper3.restitution = 1;//this is a pointer to the shape above
+	f_bumper3.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper3->CreateFixture(&f_bumper3); //add a fixture to the body
 
 
@@ -266,6 +298,26 @@ bool ModuleSceneIntro::Start()
 
 	square_p2.PushBack({ 118,147,17,18 });
 
+	bumpers1.PushBack({ 103,20,26,26 });
+	bumpers1.PushBack({ 135,20,26,26 });
+	bumpers1.speed = 0.1f;
+
+	bumpers2.PushBack({ 103,20,26,26 });
+	bumpers2.PushBack({ 135,20,26,26 });
+	bumpers2.speed = 0.1f;
+
+	bumpers3.PushBack({ 103,20,26,26 });
+	bumpers3.PushBack({ 135,20,26,26 });
+	bumpers3.speed = 0.1f;
+
+	door_closed.PushBack({ 192,130,48,40 });
+
+	door_open.PushBack({ 192,130,48,40 });
+	door_open.PushBack({ 192,172,48,40 });
+	door_open.PushBack({ 139,172,48,40 });
+	door_open.PushBack({ 192,172,48,40 });
+
+
 	a_left.PushBack({ 10,113,34,26 });
 	a_right.PushBack({54,113,34,26 });
 
@@ -376,22 +428,24 @@ update_status ModuleSceneIntro::Update()
 	time++;
 	float posx = cos((time+ 0)/45.0)* 20;
 	float posy = sin((time + 0) / 45.0) * 20;
-	b2Vec2 pos = b2Vec2(PIXEL_TO_METERS(posx +PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	b2Vec2 pos = b2Vec2(PIXEL_TO_METERS(posx +PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper1->SetTransform(pos,0);
+	App->renderer->Blit(sprites,posx+137,posy+120,&bumpers1.GetCurrentFrame(), 0.01f);
 
 	posx = cos((time + 90) / 45.0) * 20;
 	 posy = sin((time + 90) / 45.0) * 20;
-	 pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	 pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper2->SetTransform(pos, 0);
+	App->renderer->Blit(sprites, posx + 137, posy + 120, &bumpers2.GetCurrentFrame(), 0.01f);
 	
 	posx = cos((time + 180) / 45.0) * 20;
 	posy = sin((time + 180) / 45.0) * 20;
-	pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(145)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
+	pos = b2Vec2(PIXEL_TO_METERS(posx + PIXEL_TO_METERS(150)), PIXEL_TO_METERS(posy + PIXEL_TO_METERS(137)));
 
 	body_bumper3->SetTransform(pos, 0);
-
+	App->renderer->Blit(sprites, posx + 137, posy + 120, &bumpers3.GetCurrentFrame(), 0.01f);
 
 
 
@@ -456,7 +510,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
 
-	if (App->input->GetKey(SDL_SCANCODE_Z) != KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
 	{
 		App->renderer->Blit(sprites, 232, 352, &(spoink_relax.GetCurrentFrame()), 0.01f);
 	}
@@ -464,11 +518,32 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
 	}
-	
-	
 
 
+	//door
+	static int temp_door = 0;
+	if (temp_door < 170 && square == true)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.01f);
+	}
 
+	if (square == false)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
+	}
+
+	if (temp_door > 170)
+	{
+		square = false;
+		temp_door = 0;
+	}
+	temp_door++;
+	/*
+	//door
+	App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
+	*/
+
+	//ball
 	App->renderer->Blit(sprites, ball->body->GetPosition().x*25 - 7 , ball->body->GetPosition().y*25 -7, &(sprite_ball.GetCurrentFrame()));
 	if (loop_blit == true) {
 		App->renderer->Blit(loop, 0, 26);
@@ -495,8 +570,11 @@ update_status ModuleSceneIntro::Update()
 	temp++;
 
 	//Blit right and left;
-	App->renderer->Blit(sprites, 81, 370, &a_left.GetCurrentFrame(), 0.00f,-45,5,10);
-	App->renderer->Blit(sprites, 122, 368, &a_right.GetCurrentFrame(), 0.00f,-45,25,10);
+	float32 r_angle = right->body->GetAngle();
+	float32 l_angle = left->body->GetAngle();
+	
+	App->renderer->Blit(sprites, 81, 371, &a_left.GetCurrentFrame(), 0.00f,RADTODEG * (l_angle) -35,5,10);
+	App->renderer->Blit(sprites, 122, 370, &a_right.GetCurrentFrame(), 0.00f,RADTODEG * r_angle + 35,55,10);
 
 	//BLITFONT
 	//App->renderer->Blit(font, 1, 1, &numbers[4]);

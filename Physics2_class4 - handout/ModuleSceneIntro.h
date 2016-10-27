@@ -53,12 +53,33 @@ public:
 	bool reset = false;
 
 	bool square = false;
+	bool door = false;
+
+	bool bs_pokeball;
+	bool bs_flipper;
+	bool bs_bumper;
+	bool bs_slingshot;
+	bool bs_pokemon;
+	bool bs_points;
+
 	PhysBody* sensor;
 	PhysBody* sensor2;
 	PhysBody* s_reset;
 
+	PhysBody* sen_pokeball;
+	PhysBody* sen_shark;
+	PhysBody* sen_cyndaquil;
+	PhysBody* sen_pikachu;
+	PhysBody* sen_points1;
+	PhysBody* sen_points2;
+	PhysBody* sen_points3;
+	PhysBody* sen_points4;
+	PhysBody* sen_points5;
+	PhysBody* sen_points6;
+
 	PhysBody* sensor_square;
-	PhysBody* sensor_sout;
+	PhysBody* sensor_door;
+	
 
 
 	bool sensed;
@@ -70,6 +91,12 @@ public:
 	SDL_Texture* loop;
 	SDL_Texture* font;
 	uint bonus_fx;
+	uint s_flipper;
+	uint s_bumper;
+	uint s_slingshot;
+	uint s_pokeball;
+	uint s_pokemon;
+	uint s_points;
 	p2Point<int> ray;
 	bool ray_on;
 
@@ -86,7 +113,12 @@ public:
 	Animation sprite_ball;
 	Animation a_right;
 	Animation a_left;
+	Animation bumpers1;
+	Animation bumpers2;
+	Animation bumpers3;
 
+	Animation door_closed;
+	Animation door_open;
 
 	Animation square_pika;
 	Animation square_p2;
