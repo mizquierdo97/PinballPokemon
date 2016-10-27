@@ -28,20 +28,22 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("pinball/wheel.png");
-	box = App->textures->Load("pinball/crate.png");
-	rick = App->textures->Load("pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	background = App->textures->Load("pinball/ruby.png");
-	background = App->textures->Load("pinball/ruby.png");
-	loop = App->textures->Load("pinball/loopup.png");
-	font = App->textures->Load("pinball/font.png");
+	circle = App->textures->Load("game/pinball/wheel.png");
+	box = App->textures->Load("game/pinball/crate.png");
+	rick = App->textures->Load("game/pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	background = App->textures->Load("game/pinball/ruby.png");
+	background = App->textures->Load("game/pinball/ruby.png");
+	loop = App->textures->Load("game/pinball/loopup.png");
+	font = App->textures->Load("game/pinball/font.png");
 	take_font();
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
 	sensor2 = App->physics->CreateRectangleSensor(170, 197, 5, 5);
+
 	sensor_square = App->physics->CreateRectangleSensor(218, 157, 5, 5);
-	sensor_sout = App->physics->CreateRectangleSensor(190, 260, 5, 5);
+	sensor_door = App->physics->CreateRectangleSensor(220, 86, 5, 5);
+
 	s_reset = App->physics->CreateRectangleSensor(100, 430, 200, 20);
 	//Start Shape Map
 	Shape_Map1();
@@ -216,7 +218,7 @@ bool ModuleSceneIntro::Start()
 
 	//////  -------------------SPRITES--------------------
 
-	sprites = App->textures->Load("pinball/pokemons.png");
+	sprites = App->textures->Load("game/pinball/pokemons.png");
 
 	// - ANIMATIONS - pokemons
 
@@ -265,6 +267,13 @@ bool ModuleSceneIntro::Start()
 	square_pika.speed = 0.1;
 
 	square_p2.PushBack({ 118,147,17,18 });
+
+	door_closed.PushBack({ 192,130,48,40 });
+
+	door_open.PushBack({ 192,130,48,40 });
+	door_open.PushBack({ 192,172,48,40 });
+	door_open.PushBack({ 139,172,48,40 });
+	door_open.PushBack({ 192,172,48,40 });
 
 	a_left.PushBack({ 10,113,34,26 });
 	a_right.PushBack({54,113,34,26 });
@@ -456,7 +465,7 @@ update_status ModuleSceneIntro::Update()
 	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 15, 265, &(ballena.GetCurrentFrame()), 0.01f);
 
-	if (App->input->GetKey(SDL_SCANCODE_Z) != KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_DOWN) != KEY_REPEAT)
 	{
 		App->renderer->Blit(sprites, 232, 352, &(spoink_relax.GetCurrentFrame()), 0.01f);
 	}
@@ -464,11 +473,32 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
 	}
-	
-	
 
 
+	//door
+	static int temp_door = 0;
+	if (temp_door < 170 && square == true)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.01f);
+	}
 
+	if (square == false)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
+	}
+
+	if (temp_door > 170)
+	{
+		square = false;
+		temp_door = 0;
+	}
+	temp_door++;
+	/*
+	//door
+	App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
+	*/
+
+	//ball
 	App->renderer->Blit(sprites, ball->body->GetPosition().x*25 - 7 , ball->body->GetPosition().y*25 -7, &(sprite_ball.GetCurrentFrame()));
 	if (loop_blit == true) {
 		App->renderer->Blit(loop, 0, 26);

@@ -53,12 +53,15 @@ public:
 	bool reset = false;
 
 	bool square = false;
+	bool door = false;
+
 	PhysBody* sensor;
 	PhysBody* sensor2;
 	PhysBody* s_reset;
 
 	PhysBody* sensor_square;
-	PhysBody* sensor_sout;
+	PhysBody* sensor_door;
+	
 
 
 	bool sensed;
@@ -87,6 +90,8 @@ public:
 	Animation a_right;
 	Animation a_left;
 
+	Animation door_closed;
+	Animation door_open;
 
 	Animation square_pika;
 	Animation square_p2;
