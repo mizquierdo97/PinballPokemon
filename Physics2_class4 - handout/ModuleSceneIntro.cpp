@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
 	circle = App->textures->Load("pinball/wheel.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
-	/*
+	
 	background = App->textures->Load("pinball/ruby.png");
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
@@ -44,9 +44,9 @@ bool ModuleSceneIntro::Start()
 	s_pokeball = App->audio->LoadFx("pinball/Pokeball land.wav");
 	s_pokemon = App->audio->LoadFx("pinball/Do.wav");
 	s_points = App->audio->LoadFx("pinball/Pling.wav");
-	*/
-	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
 	
+	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	/*
 	circle = App->textures->Load("game/pinball/wheel.png");
 	box = App->textures->Load("game/pinball/crate.png");
 	rick = App->textures->Load("game/pinball/rick_head.png");
@@ -55,7 +55,7 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("game/pinball/ruby.png");
 	loop = App->textures->Load("game/pinball/loopup.png");
 	font = App->textures->Load("game/pinball/font.png");
-	
+	*/
 	take_font();
 
 	// Sensors;
@@ -249,7 +249,7 @@ bool ModuleSceneIntro::Start()
 
 	//////  -------------------SPRITES--------------------
 
-	sprites = App->textures->Load("game/pinball/pokemons.png");
+	sprites = App->textures->Load("pinball/pokemons.png");
 
 	// - ANIMATIONS - pokemons
 
@@ -488,13 +488,19 @@ update_status ModuleSceneIntro::Update()
 			ball->body->SetTransform(b2Vec2(500, 500),0);
 		}
 		if (shark_time > 200) {
-			ball->body->SetTransform(b2Vec2(220, 220), 0);
+			ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS(200), PIXEL_TO_METERS(200)), 0);
 			ball->body->SetLinearVelocity(b2Vec2(0, 10));
 			shark_time =0;
 			s_shark = false;
 		}
 		shark_time++;
+	}
 
+	if (s_cyndaquil == true) {
+		ball->body->SetLinearVelocity(b2Vec2(0, 0));
+		b2Vec2 pos = sen_cyndaquil->body->GetPosition();
+		sen_cyndaquil->body->SetTransform(b2Vec2(PIXEL_TO_METERS(pos.x -0.001), PIXEL_TO_METERS(pos.y - 0.001)),0);
+		s_cyndaquil = false;
 	}
 	
 	static uint time = 0;
