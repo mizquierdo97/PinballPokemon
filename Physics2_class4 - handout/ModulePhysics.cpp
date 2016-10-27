@@ -352,10 +352,10 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
 	
 	// DOOR
-	if (physA == App->scene_intro->sensor_square) {
+	if (physA == App->scene_intro->sensor_door) {
 
-		App->scene_intro->square_pika.speed = 0.2;
-		App->scene_intro->square = true;
+		App->scene_intro->door_open.speed = 0.2;
+		App->scene_intro->door = true;
 	}
 
 	//SQUARE

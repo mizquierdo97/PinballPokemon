@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
 	circle = App->textures->Load("pinball/wheel.png");
 	box = App->textures->Load("pinball/crate.png");
 	rick = App->textures->Load("pinball/rick_head.png");
-	
+	/*
 	background = App->textures->Load("pinball/ruby.png");
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
@@ -44,9 +44,9 @@ bool ModuleSceneIntro::Start()
 	s_pokeball = App->audio->LoadFx("pinball/Pokeball land.wav");
 	s_pokemon = App->audio->LoadFx("pinball/Do.wav");
 	s_points = App->audio->LoadFx("pinball/Pling.wav");
-
+	*/
 	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
-	/*
+	
 	circle = App->textures->Load("game/pinball/wheel.png");
 	box = App->textures->Load("game/pinball/crate.png");
 	rick = App->textures->Load("game/pinball/rick_head.png");
@@ -55,7 +55,7 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("game/pinball/ruby.png");
 	loop = App->textures->Load("game/pinball/loopup.png");
 	font = App->textures->Load("game/pinball/font.png");
-	*/
+	
 	take_font();
 
 	// Sensors;
@@ -248,7 +248,7 @@ bool ModuleSceneIntro::Start()
 
 	//////  -------------------SPRITES--------------------
 
-	sprites = App->textures->Load("pinball/pokemons.png");
+	sprites = App->textures->Load("game/pinball/pokemons.png");
 
 	// - ANIMATIONS - pokemons
 
@@ -317,6 +317,14 @@ bool ModuleSceneIntro::Start()
 	door_open.PushBack({ 139,172,48,40 });
 	door_open.PushBack({ 192,172,48,40 });
 
+	door_closed.PushBack({ 192,130,48,40 });
+
+	door_open.PushBack({ 192,130,48,42 });
+	door_open.PushBack({ 192,172,48,46 });
+	door_open.PushBack({ 139,172,48,46 });
+	door_open.PushBack({ 139,172,48,46 });
+	door_open.PushBack({ 192,172,48,46 });
+	door_open.speed = 0.0001f;
 
 	a_left.PushBack({ 10,113,34,26 });
 	a_right.PushBack({54,113,34,26 });
@@ -503,8 +511,8 @@ update_status ModuleSceneIntro::Update()
 	}
 
 
-	// --POKEMONS--
-	App->renderer->Blit(sprites,pikachu_x,357, &(pikachu.GetCurrentFrame()), 0.01f);
+	//--POKEMONS--
+	App->renderer->Blit(sprites, pikachu_x, 357, &(pikachu.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 193, 260, &(makuhita.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 76, 128, &(cyndaquil.GetCurrentFrame()), 0.01f);
 	App->renderer->Blit(sprites, 55, 200, &(chic.GetCurrentFrame()), 0.01f);
@@ -519,36 +527,33 @@ update_status ModuleSceneIntro::Update()
 		App->renderer->Blit(sprites, 232, 358, &(spoink_fast.GetCurrentFrame()), 0.01f);
 	}
 
-
-	//door
-	static int temp_door = 0;
-	if (temp_door < 170 && square == true)
-	{
-		App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.01f);
-	}
-
-	if (square == false)
-	{
-		App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
-	}
-
-	if (temp_door > 170)
-	{
-		square = false;
-		temp_door = 0;
-	}
-	temp_door++;
-	/*
-	//door
-	App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.01f);
-	*/
-
 	//ball
-	App->renderer->Blit(sprites, ball->body->GetPosition().x*25 - 7 , ball->body->GetPosition().y*25 -7, &(sprite_ball.GetCurrentFrame()));
+	App->renderer->Blit(sprites, ball->body->GetPosition().x * 25 - 7, ball->body->GetPosition().y * 25 - 7, &(sprite_ball.GetCurrentFrame()));
 	if (loop_blit == true) {
 		App->renderer->Blit(loop, 0, 26);
 	}
+
+	//door
+	static int temp_door = 0;
+	if (temp_door < 20 && door == true)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.001f);
+	}
+
+	if (door == false)
+	{
+		App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.001f);
+	}
+
+	if (temp_door > 20)
+	{
+		door = false;
+		temp_door = 0;
+	}
+	temp_door++;
+
 	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
+
 
 	//square pikachu
 	static int temp = 0;
@@ -872,7 +877,7 @@ void ModuleSceneIntro::Shape_Map2()
 	}
 	ricks.clear();
 
-	int map[74] = {
+	int map[76] = {
 		143, 443,
 		143, 403,
 		215, 363,
@@ -885,7 +890,8 @@ void ModuleSceneIntro::Shape_Map2()
 		212, 139,
 		224, 109,
 		230, 83,
-		223, 69,
+		228, 55,
+		215, 55,
 		210, 82,
 		207, 101,
 		200, 116,
@@ -933,7 +939,7 @@ void ModuleSceneIntro::Shape_Map2()
 	};
 
 
-	ricks.add(App->physics->CreateChain(0, 0, map, 74));
+	ricks.add(App->physics->CreateChain(0, 0, map, 76));
 	ricks.add(App->physics->CreateChain(0, 0, shape1, 36));
 
 
