@@ -17,7 +17,7 @@ ModulePhysics::ModulePhysics(Application* app, bool start_enabled) : Module(app,
 {
 	world = NULL;
 	mouse_joint = NULL;
-	debug = true;
+	debug = false;
 }
 
 // Destructor
@@ -358,6 +358,10 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 		App->scene_intro->door = true;
 	}
 
+	if (physA == App->scene_intro->sen_block) {
+		App->scene_intro->block = true;
+	}
+
 	//SQUARE
 	if (physA == App->scene_intro->sensor_square) {
 
@@ -397,8 +401,10 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 
 			App->scene_intro->bs_bumper = true;
 		}
+		if (physA->width == 13) {
+			App->scene_intro->bs_flipper = true;
+		}
 	}
-
 
 
 	//POINTS

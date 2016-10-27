@@ -37,21 +37,21 @@ bool ModuleSceneIntro::Start()
 	background = App->textures->Load("pinball/ruby.png");
 	loop = App->textures->Load("pinball/loopup.png");
 	font = App->textures->Load("pinball/font.png");*/
-	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
+	
 	s_flipper = App->audio->LoadFx("game/pinball/Saver.wav");
 	s_bumper = App->audio->LoadFx("game/pinball/bonus.wav");
-	s_slingshot = App->audio->LoadFx("game/pinball/Pokemonhit.wav");
-	s_pokeball = App->audio->LoadFx("game/pinball/Pokeball land.wav");
+	s_slingshot = App->audio->LoadFx("game/pinball/Saver.wav");
+	s_pokeball = App->audio->LoadFx("game/pinball/Saver.wav");
 	s_pokemon = App->audio->LoadFx("game/pinball/Do.wav");
 	s_points = App->audio->LoadFx("game/pinball/Pling.wav");
 	
-	//bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+
 	
 	circle = App->textures->Load("game/pinball/wheel.png");
 	box = App->textures->Load("game/pinball/crate.png");
 	rick = App->textures->Load("game/pinball/rick_head.png");
 	bonus_fx = App->audio->LoadFx("game/pinball/bonus.wav");
-	background = App->textures->Load("game/pinball/ruby.png");
+	playagain = App->textures->Load("game/pinball/playagain.png");
 	background = App->textures->Load("game/pinball/ruby.png");
 	loop = App->textures->Load("game/pinball/loopup.png");
 	font = App->textures->Load("game/pinball/font.png");
@@ -75,11 +75,13 @@ bool ModuleSceneIntro::Start()
 	sen_points6 = App->physics->CreateRectangleSensor(157,200, 5, 5);
 
 	s_reset = App->physics->CreateRectangleSensor(100, 430, 200, 20);
-	//Start Shape Map
+
+	
+	//Start Shape Map200
 	Shape_Map1();
 
 
-	ball = App->physics->CreateCircle(250, 350, 6);
+	ball = App->physics->CreateCircle(243, 350, 6);
 	
 
 	////RIGHT
@@ -235,8 +237,8 @@ bool ModuleSceneIntro::Start()
 	prismaticJoint_launcher.enableLimit = true;
 	//prismaticJoint_launcher.type
 	
-	prismaticJoint_launcher.lowerTranslation = PIXEL_TO_METERS(20);
-	prismaticJoint_launcher.upperTranslation = PIXEL_TO_METERS(35);
+	prismaticJoint_launcher.lowerTranslation = PIXEL_TO_METERS(30);
+	prismaticJoint_launcher.upperTranslation = PIXEL_TO_METERS(40);
 	
 	prismaticJoint_launcher.localAnchorA.Set(0, 0);
 	prismaticJoint_launcher.localAnchorB.Set(0, 0);
@@ -347,70 +349,56 @@ bool ModuleSceneIntro::CleanUp()
 update_status ModuleSceneIntro::Update()
 {
 	static int pikachu_x = 20;
-	App->renderer->Blit(background, 0, 0);
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-		b2Vec2 force = b2Vec2(0, -150);
-		ball->body->ApplyForceToCenter(force, 1);
-		
-	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN) {
-		b2Vec2 force = b2Vec2(-40, 0);
-		ball->body->ApplyForceToCenter(force, 1);
-	}
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-		b2Vec2 force = b2Vec2(20, 0);
-		ball->body->ApplyForceToCenter(force, 1);
+	if (n_balls > 0) {
 
-	}
+		App->renderer->Blit(background, 0, 0);
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+			b2Vec2 force = b2Vec2(0, -150);
+			ball->body->ApplyForceToCenter(force, 1);
 
-	static int pow = 0;
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
-		pow += 3;
-		//b2Vec2 force = b2Vec2(0, -150);
-		//ball->body->ApplyForceToCenter(force, 1);
-		if (pow > 300)
-			pow = 300;
-		
-	}
-
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
-		b2Vec2 force = b2Vec2(0, -pow);
-		launcher->body->ApplyForceToCenter(force,1);
-		pow = 0;
-
-	}
+		}
 
 
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-		b2Vec2 force = b2Vec2(0, -200);
-		right->body->ApplyForceToCenter(force, 1);
-		revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
-		pikachu_x = 197;
-		sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS(210), PIXEL_TO_METERS(360)), 0);
-	
-	}
+		static int pow = 0;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT) {
+			pow += 3;
+			//b2Vec2 force = b2Vec2(0, -150);
+			//ball->body->ApplyForceToCenter(force, 1);
+			if (pow > 300)
+				pow = 300;
 
-	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
-		ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY())), 0);
-	}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
+			b2Vec2 force = b2Vec2(0, -200);
+			right->body->ApplyForceToCenter(force, 1);
+			revoluteJointDef_right.lowerAngle = 30 * DEGTORAD;
+			pikachu_x = 197;
+			sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS(210), PIXEL_TO_METERS(360)), 0);
 
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-		b2Vec2 force = b2Vec2(0, -200);
-		left->body->ApplyForceToCenter(force, 1);
-		revoluteJointDef_left.lowerAngle = 30 * DEGTORAD;
-		pikachu_x = 20;
-		sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS( 33), PIXEL_TO_METERS(360)),0);
-	}
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
-		static bool temp = false;
-		if (temp == true)
-			Shape_Map1();
+		if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN) {
+			ball->body->SetTransform(b2Vec2(PIXEL_TO_METERS(App->input->GetMouseX()), PIXEL_TO_METERS(App->input->GetMouseY())), 0);
+		}
 
-		else
-			Shape_Map2();
-		temp = !temp;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
+			b2Vec2 force = b2Vec2(0, -200);
+			left->body->ApplyForceToCenter(force, 1);
+			revoluteJointDef_left.lowerAngle = 30 * DEGTORAD;
+			pikachu_x = 20;
+			sen_pikachu->body->SetTransform(b2Vec2(PIXEL_TO_METERS(33), PIXEL_TO_METERS(360)), 0);
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
+			static bool temp = false;
+			if (temp == true)
+				Shape_Map1();
+
+			else
+				Shape_Map2();
+			temp = !temp;
+		}
 	}
 
 	if (change == true) {
@@ -433,6 +421,7 @@ update_status ModuleSceneIntro::Update()
 	if (reset == true) {
 		Reset_ball();
 		reset = false;
+		block = false;
 	}
 	if (bs_points == true) {
 		bs_points = false;
@@ -465,6 +454,7 @@ update_status ModuleSceneIntro::Update()
 		App->audio->PlayFx(s_pokeball);
 
 	}
+
 
 	//POKEMON INTERACTIONS
 
@@ -619,23 +609,25 @@ update_status ModuleSceneIntro::Update()
 
 	//door
 	static int temp_door = 0;
-	if (temp_door < 20 && door == true)
-	{
-		App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.001f);
-	}
+	if (door == true) {
+		if (temp_door < 20)
+		{
+			App->renderer->Blit(sprites, 201, 48, &(door_open.GetCurrentFrame()), 0.001f);
+		}
 
-	if (door == false)
-	{
-		App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.001f);
-	}
+		if (door == false)
+		{
+			App->renderer->Blit(sprites, 201, 48, &(door_closed.GetCurrentFrame()), 0.001f);
+		}
 
-	if (temp_door > 20)
-	{
-		door = false;
-		temp_door = 0;
+		if (temp_door > 20)
+		{
+			door = false;
+			temp_door = 0;
+			score += 100;
+		}
+		temp_door++;
 	}
-	temp_door++;
-
 	App->renderer->Blit(sprites, 180, 148, &(shark.GetCurrentFrame()), 0.01f);
 
 
@@ -655,6 +647,7 @@ update_status ModuleSceneIntro::Update()
 	{
 		square = false;
 		temp = 0;
+		score += 200;
 	}
 	temp++;
 
@@ -671,8 +664,14 @@ update_status ModuleSceneIntro::Update()
 
 
 	if (n_balls <= 0) {
-		App->renderer->Blit(background, 0, 0);
+		App->renderer->Blit(playagain, 0, 0);
+		blit_font_final();
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN) {
+			n_balls = 3;
+			score = 0;
+		}
 	}
+	
 	return UPDATE_CONTINUE;
 
 }
@@ -1068,6 +1067,18 @@ void ModuleSceneIntro::blit_font() {
 	
 		int temp = score_temp % 10;
 		App->renderer->Blit(font, i * 13 + 3, 1, &numbers[temp]);
+		score_temp = score_temp / 10;
+	}
+
+}
+
+
+void ModuleSceneIntro::blit_font_final() {
+	int score_temp = score;
+	for (int i = 8; i >= 0; i--) {
+		
+		int temp = score_temp % 10;
+		App->renderer->Blit(font, i * 13 + 70,160, &numbers[temp]);
 		score_temp = score_temp / 10;
 	}
 

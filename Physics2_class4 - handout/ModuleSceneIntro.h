@@ -24,6 +24,7 @@ public:
 	void Reset_ball();
 	void take_font();
 	void blit_font();
+	void blit_font_final();
 public:
 	p2List<PhysBody*> circles;
 	p2List<PhysBody*> boxes;
@@ -51,7 +52,7 @@ public:
 	bool change = false;
 	bool loop_blit = true;
 	bool reset = false;
-
+	bool block = false;
 	bool square = false;
 	bool door = false;
 
@@ -64,6 +65,7 @@ public:
 	bool s_cyndaquil = false;
 	bool s_pikachu = false;
 	bool s_shark = false;
+
 
 	int n_balls = 3;
 	PhysBody* sensor;
@@ -81,6 +83,7 @@ public:
 	PhysBody* sen_points5;
 	PhysBody* sen_points6;
 
+	PhysBody* sen_block;
 	PhysBody* sensor_square;
 	PhysBody* sensor_door;
 
@@ -93,6 +96,7 @@ public:
 	bool sensed;
 
 	SDL_Texture* background;
+	SDL_Texture* playagain;
 	SDL_Texture* circle;
 	SDL_Texture* box;
 	SDL_Texture* rick;
