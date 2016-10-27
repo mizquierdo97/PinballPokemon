@@ -368,6 +368,66 @@ void ModulePhysics::BeginContact(b2Contact* contact)
 	if (physA == App->scene_intro->s_reset) {
 		App->scene_intro->reset = true;
 	}
+
+	//SENSORS sound and score
+	if (physA == App->scene_intro->sen_pokeball) {
+
+		App->scene_intro->bs_pokeball = true;
+	}
+	if (physA == App->scene_intro->sen_shark) {
+
+		App->scene_intro->bs_pokemon = true;
+		App->scene_intro->s_shark= true;
+	}
+	if (physA == App->scene_intro->sen_cyndaquil) {
+
+		App->scene_intro->bs_pokemon = true;
+		App->scene_intro->s_cyndaquil = true;
+	}
+	if (physA == App->scene_intro->sen_pikachu) {
+
+		App->scene_intro->bs_pokemon = true;
+		App->scene_intro->s_pikachu = true;
+	}
+
+	//BUMPERS
+	if (physA != NULL) {
+		if (physA->width == 6) {
+
+			App->scene_intro->bs_bumper = true;
+		}
+	}
+
+
+
+	//POINTS
+	if (physA == App->scene_intro->sen_points1) {
+
+		App->scene_intro->bs_points = true;
+	}
+	if (physA == App->scene_intro->sen_points2) {
+
+		App->scene_intro->bs_points = true;
+	}
+	if (physA == App->scene_intro->sen_points3) {
+
+		App->scene_intro->bs_points = true;
+	}
+	if (physA == App->scene_intro->sen_points4) {
+
+		App->scene_intro->bs_points = true;
+	}
+	if (physA == App->scene_intro->sen_points5) {
+
+		App->scene_intro->bs_points = true;
+	}
+	if (physA == App->scene_intro->sen_points6) {
+
+		App->scene_intro->bs_points = true;
+	}
+
+
+
 	
 	if(physA && physA->listener != NULL)
 		physA->listener->OnCollision(physA, physB);

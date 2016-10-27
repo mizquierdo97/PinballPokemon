@@ -151,6 +151,7 @@ bool ModuleSceneIntro::Start()
 	f_bumper2.shape = &shape_bumper2;
 	f_bumper2.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper2->CreateFixture(&f_bumper2); //add a fixture to the body
+	
 											 
 
 	 //3
@@ -167,7 +168,7 @@ bool ModuleSceneIntro::Start()
 	f_bumper3.restitution = 1,1;//this is a pointer to the shape above
 	body_bumper3->CreateFixture(&f_bumper3); //add a fixture to the body
 
-
+	
 
 	//SLINGSHOT
 	
@@ -431,7 +432,71 @@ update_status ModuleSceneIntro::Update()
 		Reset_ball();
 		reset = false;
 	}
+	if (bs_points == true) {
+		bs_points = false;
+		App->audio->PlayFx(s_points);
+		score += 100;
+	}
+	if (bs_pokemon == true) {
+		bs_pokemon = false;
+		App->audio->PlayFx(s_pokemon);
+		score += 1000;
 
+	}
+	if (bs_flipper == true) {
+		bs_flipper = false;
+		App->audio->PlayFx(s_flipper);
+	}
+
+	if (bs_bumper == true) {
+		bs_bumper = false;
+		App->audio->PlayFx(s_bumper);
+		score += 100;
+	}
+	if (bs_slingshot == true) {
+		bs_slingshot = false;
+		App->audio->PlayFx(s_slingshot);
+		score += 300;
+	}
+	if (bs_pokeball == true) {
+		bs_pokeball = false;
+		App->audio->PlayFx(s_pokeball);
+
+	}
+
+	//POKEMON INTERACTIONS
+
+
+	static int  pikachu_time = 0;
+	if(s_pikachu == true){
+		b2Vec2 vel = ball->body->GetLinearVelocity();
+		if (pikachu_time < 200) {
+			
+			ball->body->SetLinearVelocity(b2Vec2(0, 0));
+		}
+		if (pikachu_time > 200) {
+			ball->body->SetLinearVelocity(b2Vec2(0,-100));
+			s_pikachu = false;
+			pikachu_time = 0;
+		}
+		pikachu_time++;
+	}
+
+	static int shark_time = 0;
+	if (s_shark == true) {
+		if (shark_time < 200) {
+			ball->body->SetTransform(b2Vec2(500, 500),0);
+		}
+		if (shark_time > 200) {
+			ball->body->SetTransform(b2Vec2(220, 220), 0);
+			ball->body->SetLinearVelocity(b2Vec2(0, 10));
+			shark_time =0;
+			s_shark = false;
+		}
+		shark_time++;
+
+	}
+	
 	static uint time = 0;
 	time++;
 	float posx = cos((time+ 0)/45.0)* 20;
@@ -590,7 +655,17 @@ update_status ModuleSceneIntro::Update()
 
 void ModuleSceneIntro::OnCollision(PhysBody* bodyA, PhysBody* bodyB)
 {
-	int x, y;
+	/*if (bodyB->body == body_bumper1) {
+		bs_bumper = true;
+	}
+	if (bodyB->body == body_bumper2) {
+		bs_bumper = true;
+	}
+
+	if (bodyB->body == body_bumper3) {
+		bs_bumper = true;
+	}
+	*/
 
 	App->audio->PlayFx(bonus_fx);
 	static bool temp = true;

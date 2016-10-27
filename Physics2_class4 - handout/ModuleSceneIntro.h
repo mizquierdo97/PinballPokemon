@@ -55,12 +55,15 @@ public:
 	bool square = false;
 	bool door = false;
 
-	bool bs_pokeball;
-	bool bs_flipper;
-	bool bs_bumper;
-	bool bs_slingshot;
-	bool bs_pokemon;
-	bool bs_points;
+	bool bs_pokeball = false;
+	bool bs_flipper = false;
+	bool bs_bumper = false;
+	bool bs_slingshot = false;
+	bool bs_pokemon = false;
+	bool bs_points = false;
+	bool s_cyndaquil = false;
+	bool s_pikachu = false;
+	bool s_shark = false;
 
 	PhysBody* sensor;
 	PhysBody* sensor2;
@@ -79,6 +82,10 @@ public:
 
 	PhysBody* sensor_square;
 	PhysBody* sensor_door;
+
+	//PhysBody* b_bumper1;
+	//PhysBody* b_bumper2;
+	//PhysBody* b_bumper3;
 	
 
 
