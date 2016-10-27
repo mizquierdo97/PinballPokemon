@@ -84,6 +84,8 @@ public:
 	Animation shark;
 	Animation ballena;
 	Animation sprite_ball;
+	Animation a_right;
+	Animation a_left;
 
 
 	Animation square_pika;

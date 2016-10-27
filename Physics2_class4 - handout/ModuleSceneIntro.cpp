@@ -28,13 +28,14 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	circle = App->textures->Load("Game/pinball/wheel.png");
-	box = App->textures->Load("Game/pinball/crate.png");
-	rick = App->textures->Load("Game/pinball/rick_head.png");
-	bonus_fx = App->audio->LoadFx("Game/pinball/bonus.wav");
-	background = App->textures->Load("Game/pinball/ruby.png");
-	loop = App->textures->Load("Game/pinball/loopup.png");
-	font = App->textures->Load("Game/pinball/font.png");
+	circle = App->textures->Load("pinball/wheel.png");
+	box = App->textures->Load("pinball/crate.png");
+	rick = App->textures->Load("pinball/rick_head.png");
+	bonus_fx = App->audio->LoadFx("pinball/bonus.wav");
+	background = App->textures->Load("pinball/ruby.png");
+	background = App->textures->Load("pinball/ruby.png");
+	loop = App->textures->Load("pinball/loopup.png");
+	font = App->textures->Load("pinball/font.png");
 	take_font();
 
 	sensor = App->physics->CreateRectangleSensor(47, 187, 5, 5);
@@ -146,8 +147,8 @@ bool ModuleSceneIntro::Start()
 	b2Body* body_slingshot1 = App->physics->world->CreateBody(&slingshot1);
 	b2Vec2 vertices1[3];
 	vertices1[0].Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	vertices1[1].Set(PIXEL_TO_METERS(-10), PIXEL_TO_METERS(10));
-	vertices1[2].Set(PIXEL_TO_METERS(-20), PIXEL_TO_METERS(22));
+	vertices1[1].Set(PIXEL_TO_METERS(-5), PIXEL_TO_METERS(10));
+	vertices1[2].Set(PIXEL_TO_METERS(-20), PIXEL_TO_METERS(27));
 
 
 	b2PolygonShape shape_slingshot1;
@@ -170,8 +171,8 @@ bool ModuleSceneIntro::Start()
 	b2Body* body_slingshot2 = App->physics->world->CreateBody(&slingshot2);
 	b2Vec2 vertices2[3];
 	vertices2[0].Set(PIXEL_TO_METERS(0), PIXEL_TO_METERS(0));
-	vertices2[1].Set(PIXEL_TO_METERS(10), PIXEL_TO_METERS(10));
-	vertices2[2].Set(PIXEL_TO_METERS(20), PIXEL_TO_METERS(22));
+	vertices2[1].Set(PIXEL_TO_METERS(5), PIXEL_TO_METERS(10));
+	vertices2[2].Set(PIXEL_TO_METERS(20), PIXEL_TO_METERS(27));
 
 
 	b2PolygonShape shape_slingshot2;
@@ -215,7 +216,7 @@ bool ModuleSceneIntro::Start()
 
 	//////  -------------------SPRITES--------------------
 
-	sprites = App->textures->Load("Game/pinball/pokemons.png");
+	sprites = App->textures->Load("pinball/pokemons.png");
 
 	// - ANIMATIONS - pokemons
 
@@ -265,6 +266,8 @@ bool ModuleSceneIntro::Start()
 
 	square_p2.PushBack({ 118,147,17,18 });
 
+	a_left.PushBack({ 10,113,34,26 });
+	a_right.PushBack({54,113,34,26 });
 
 	//////  -------------------SPRITES--------------------
 
@@ -313,6 +316,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_UP) {
 		b2Vec2 force = b2Vec2(0, -pow);
 		launcher->body->ApplyForceToCenter(force,1);
+		pow = 0;
 
 	}
 
@@ -490,8 +494,9 @@ update_status ModuleSceneIntro::Update()
 	}
 	temp++;
 
-
-
+	//Blit right and left;
+	App->renderer->Blit(sprites, 81, 370, &a_left.GetCurrentFrame(), 0.00f,-45,5,10);
+	App->renderer->Blit(sprites, 122, 368, &a_right.GetCurrentFrame(), 0.00f,-45,25,10);
 
 	//BLITFONT
 	//App->renderer->Blit(font, 1, 1, &numbers[4]);
@@ -751,13 +756,13 @@ void ModuleSceneIntro::Shape_Map1()
 	int rebote1[6] = {
 		173, 318,
 		173, 337,
-		154, 340
+		154, 345
 	};
 
 	int rebote2[6] = {
 		66, 317,
 		66, 338,
-		85, 340
+		85, 345
 	};
 
 
