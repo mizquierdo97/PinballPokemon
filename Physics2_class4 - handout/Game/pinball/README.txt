@@ -32,5 +32,13 @@
 
 	http://www.minijuegos.com/juego/pokemon-pinball-ruby-sapphire
 
+  FEATURED EXCLUDED:
+ 	 -Pokemon Capture System (and other related things like pokemon evolutions and pokeball changes)	
+	 -Some interactions and animations with Pokemons
+	 -Shop System
+	 -Map selection
+
   LINK TO GITHUB:
-	https://github.com/mizquierdo97/PinballPokemon
+	
+
+ 
